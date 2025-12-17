@@ -1,16 +1,17 @@
-# docker/client/Dockerfile (dev)
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
-# Копируем package*.json для кэширования слоёв
-COPY client/package.json client/yarn.lock ./ 
+ENV NODE_ENV=development
 
-# Устанавливаем зависимости
+# Копируем только файлы зависимостей
+COPY client/package.json client/yarn.lock ./
+
+# Устанавливаем зависимости НОРМАЛЬНО
 RUN yarn install --frozen-lockfile --network-timeout 100000
 
-# Копируем (в dev мы всё равно монтируем ./client)
-COPY client/ /app/
+# Базовая копия (volume перезапишет в dev)
+COPY client/ .
 
 EXPOSE 3000
 

@@ -37,7 +37,53 @@ restart: down up
 logs:
 	$(DEV_COMPOSE) logs -f
 
-clean:
+ps:
+	$(DEV_COMPOSE) ps
+
+# --------------------------
+# Restart client only
+# --------------------------
+rc:
+	$(DEV_COMPOSE) stop client
+	$(DEV_COMPOSE) rm -f client
+	$(DEV_COMPOSE) up -d client
+
+# --------------------------
+# SAFE CLEAN
+# --------------------------
+
+clean-build:
+	@echo "🧹 Cleaning Docker build cache..."ы
+	$(DEV_COMPOSE) down -v
+	docker builder prune -af
+
+clean-containers:
+	@echo "🧹 Removing stopped containers..."
+	docker container prune -f
+
+clean-images:
+	@echo "🧹 Removing unused images..."
+	docker image prune -af
+
+clean-networks:
+	@echo "🧹 Removing unused networks..."
+	docker network prune -f
+
+clean-safe: clean-build clean-containers clean-images clean-networks
+	@echo "✅ Safe Docker cleanup done (volumes preserved)"
+
+# --------------------------
+# DANGEROUS CLEAN
+# --------------------------
+
+reset-db:
+	@echo "💣 Removing Postgres volume (pgdata)..."
+	$(DEV_COMPOSE) down
+	docker volume rm $$(docker volume ls -q | grep pgdata) || true
+
+nuke:
+	@echo "☢️  FULL Docker reset (images, cache, volumes)"
+	$(DEV_COMPOSE) down -v
 	docker system prune -af --volumes
 
 # --------------------------
