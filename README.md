@@ -1,0 +1,227 @@
+# 🛒 Shop Project
+
+[![Docker](https://img.shields.io/badge/Docker-20.19-blue)](https://www.docker.com/)
+[![Node.js](https://img.shields.io/badge/Node.js-20.19-brightgreen)](https://nodejs.org/)
+[![Python](https://img.shields.io/badge/Python-3.14-blue)](https://www.python.org/)
+
+Локальное dev-окружение для проекта с **FastAPI** (API) и **Vue 3** (Frontend) через **Nginx** с HTTPS.
+
+---
+
+## 📁 Структура проекта
+
+```bash
+project-root/
+│
+├── api/ # Backend (FastAPI)
+│ ├── run.py # Запуск FastAPI
+│ ├── run_seed.py # Сидинг базы
+│ ├── alembic.ini # Конфигурация Alembic
+│ └── app/
+│   └── alembic/ # Миграции
+│
+├── client/ # Frontend (Vue 3)
+│
+├── nginx/ # Nginx конфиг и SSL сертификаты
+│ ├── nginx.conf
+│ └── certs/ # Dev-сертификаты (создаются Makefile)
+│
+├── docker/ # Dockerfile для API и Frontend
+│ ├── api/Dockerfile
+│ └── client/Dockerfile
+│
+├── certs/ # Root CA и промежуточные сертификаты
+│
+├── docker-compose.yaml
+└── Makefile # Dev команды, миграции, seed и HTTPS
+```
+
+## ⚡ Dev окружение с HTTPS
+
+**Домены для локальной разработки:**
+
+- Frontend: `https://shop.local`  
+- Backend: `https://api.shop.local`
+---
+
+**Добавьте в `/etc/hosts`:**
+127.0.0.1 shop.local
+127.0.0.1 api.shop.local
+
+---
+
+## 🛠 Makefile команды
+
+### Dev окружение
+
+| Команда                 | Описание |
+|-------------------------|----------|
+| `make dev`              | Поднимает контейнеры с пересборкой (форграунд) |
+| `make up`               | Запускает контейнеры в фоне |
+| `make down`             | Останавливает контейнеры |
+| `make restart`          | Пересобирает и перезапускает контейнеры |
+| `make logs`             | Просмотр логов всех контейнеров |
+| `make clean`            | Очистка Docker-кэша и volumes |
+
+### HTTPS (Dev Certificates)
+
+| Команда                 | Описание |
+|-------------------------|----------|
+| `make dev-certs`        | Создаёт локальный root CA и подпись для `shop.local` и `api.shop.local`, добавляет root CA в Ubuntu |
+
+### Миграции базы данных (Alembic)
+
+| Команда                             | Описание |
+|-------------------------------------|----------|
+| `make revision msg="описание"`       | Создаёт новую миграцию с автогенерацией |
+| `make migrate`                       | Применяет все миграции к базе |
+| `make downgrade`                     | Откатывает последнюю миграцию |
+
+### Seed данных
+
+| Команда                 | Описание |
+|-------------------------|----------|
+| `make seed`             | Запускает `api/run_seed.py` для заполнения базы тестовыми данными |
+
+---
+
+## 🔧 Использование
+
+1️⃣ Генерация root CA и сертификатов:
+
+```bash
+make dev-certs
+```
+
+2️⃣ Запуск dev окружения:
+
+```bash
+make dev
+```
+Frontend: https://shop.local
+Backend: https://api.shop.local
+
+3️⃣ Миграции базы данных:
+```bash
+make revision msg="create users table"
+make migrate
+```
+4️⃣ Seed базы:
+```bash
+make seed
+```
+5️⃣ Остановка окружения:
+```bash
+make down
+```
+
+---
+
+🔐 HTTPS Certificates
+
+The project uses local Root CA + signed domain certificates.
+
+Default dev domains:
+
+https://shop.local
+
+https://api.shop.local
+
+All certificates are stored in:
+```bash
+nginx/certs/
+nginx/ca/
+```
+---
+📜 Root CA metadata
+
+Editable in:
+```bash
+nginx/rootCA.conf
+```
+Example:
+```bash
+[ req ]
+distinguished_name = req_distinguished_name
+x509_extensions    = v3_req
+prompt = no
+
+[ req_distinguished_name ]
+C  = UA
+ST = Kyiv
+L  = Kyiv
+O  = Dev Company
+OU = Dev Department
+CN = Local Dev Root CA
+emailAddress = dev@example.com
+
+[ v3_req ]
+basicConstraints = CA:TRUE
+keyUsage = keyCertSign, cRLSign
+
+```
+---
+🛠 Generate Dev Certificates (Root CA + domains)
+
+Full automated setup:
+```bash
+make dev-certs
+```
+This will:
+
+Create rootCA.key + rootCA.crt
+
+Create certificates for:
+
+- shop.local
+
+- api.shop.local
+
+Install Root CA into Ubuntu trusted certificates
+
+Certificates available in:
+```bash
+nginx/certs/
+nginx/ca/
+```
+---
+🎯 Create Certificate for Any Domain
+```sh
+make cert DOMAIN=my.local
+```
+Creates:
+```lu
+my.local.key
+my.local.crt
+my.local.csr
+my.local.ext
+```
+---
+🌐 SAN Certificate
+
+(multiple domains)
+
+```sh
+make san DOMAIN=site.local ALT="admin.site.local api.site.local"
+
+```
+Generates certificate for both:
+
+- site.local
+
+- admin.site.local
+
+- api.site.local
+---
+✳ Wildcard Certificate
+```sh
+make wildcard DOMAIN=shop.local
+```
+Result:
+
+ - *.shop.local
+
+ - shop.local
+
+Useful for multi-subdomain setups.
+
