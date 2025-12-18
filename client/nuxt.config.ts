@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   css: ["./app/assets/css/main.css"],
   components: [
     {
-      path: "~/components",
+      path: "@/components",
       pathPrefix: false,
     },
   ],
@@ -21,5 +21,5 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
-  modules: ["@vueuse/nuxt"],
+  modules: ["@vueuse/nuxt", "@pinia/nuxt", "nuxt-typed-router"],
 });
