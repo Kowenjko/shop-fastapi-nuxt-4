@@ -19,11 +19,15 @@ const addToCart = () => emit('addToCart')
     <div class="grid grid-cols-1 gap-8 p-8 md:grid-cols-2">
       <!-- Изображение -->
       <div class="aspect-square overflow-hidden rounded-none bg-gray-50">
-        <img
+        <nuxt-img
           :src="product.image_url"
           :alt="product.name"
           class="h-full w-full object-cover"
-          @error="handleImageError"
+          @error="noImage()"
+          placeholder
+          width="262"
+          height="262"
+          format="webp"
         />
       </div>
 

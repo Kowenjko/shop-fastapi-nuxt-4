@@ -9,14 +9,14 @@ const showNotification = ref(false)
 
 const handleAddToCart = async () => {
   adding.value = true
-  // const success = await cartStore.addToCart(product.id, 1);
+  const success = await cartStore.addToCart(product.id, 1)
 
-  // if (success) {
-  //   showNotification.value = true;
-  //   setTimeout(() => {
-  //     showNotification.value = false;
-  //   }, 2000);
-  // }
+  if (success) {
+    showNotification.value = true
+    setTimeout(() => {
+      showNotification.value = false
+    }, 2000)
+  }
 
   adding.value = false
 }
