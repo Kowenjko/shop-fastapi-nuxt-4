@@ -3,6 +3,8 @@
     <AppHeader />
     <slot />
     <AppFooter />
+    <ModalProceedCart />
+    <ModalClearCart />
   </div>
 </template>
 s

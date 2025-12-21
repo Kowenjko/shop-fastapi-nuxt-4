@@ -26,14 +26,15 @@ export const useCartStore = defineStore('cart', () => {
    * Получить детальную информацию о корзине
    */
   const fetchCartDetails = async () => {
-    if (!hasItems.value) {
-      cartDetails.value = { items: [], total: 0, items_count: 0 }
-      return
-    }
-
+    // if (!hasItems.value) {
+    //   cartDetails.value = { items: [], total: 0, items_count: 0 }
+    //   return
+    // }
+    console.log('test')
     loading.value = true
     try {
       const response = await cartAPI.getCart({ cart: cartItems.value })
+      console.log(response)
       cartDetails.value = response
     } catch (err) {
       console.error('Error fetching cart details:', err)

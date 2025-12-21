@@ -3,7 +3,7 @@ export const cartAPI = {
     const { $api } = useNuxtApp()
     return await $api<ResponseCartI>(CART, {
       method: 'POST',
-      body: { cartData },
+      body: { cart: cartData.cart },
     })
   },
 
