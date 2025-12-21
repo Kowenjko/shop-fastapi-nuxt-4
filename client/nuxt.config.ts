@@ -29,5 +29,5 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
-  modules: ['@vueuse/nuxt', '@pinia/nuxt', 'nuxt-typed-router', '@nuxt/image'],
+  modules: ['@vueuse/nuxt', '@pinia/nuxt', 'nuxt-typed-router', '@nuxt/image', 'pinia-plugin-persistedstate/nuxt'],
 })
