@@ -4,10 +4,10 @@ const {
   isButtonBack = false,
   to = null,
 } = defineProps<{
-  error: string;
-  isButtonBack?: boolean;
-  to?: string | { name: string } | null;
-}>();
+  error: string | any
+  isButtonBack?: boolean
+  to?: string | { name: string } | null
+}>()
 </script>
 
 <template>
@@ -23,6 +23,5 @@ const {
   </div>
   <div class="py-12 text-center" v-else>
     <p class="font-medium text-red-600">{{ error }}</p>
-    {{ String(isButtonBack) }}
   </div>
 </template>

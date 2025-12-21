@@ -1,19 +1,19 @@
 <script lang="ts" setup>
-import { computed } from "vue";
+const {
+  totalProductsCount = 0,
+  categories,
+  productsCount,
+} = defineProps<{ totalProductsCount: number; categories?: CategoryI[]; productsCount: number }>()
 
-const productsStore = useProductsStore();
-
-const totalProductsCount = computed(() => {
-  // return productsStore.products.length;
-});
+const productsStore = useProductsStore()
 
 const selectCategory = (categoryId: number | null) => {
   if (categoryId === null) {
-    // productsStore.clearCategoryFilter();
+    productsStore.clearCategoryFilter()
   } else {
-    // productsStore.setCategory(categoryId);
+    productsStore.setCategory(categoryId)
   }
-};
+}
 </script>
 
 <template>
@@ -21,7 +21,7 @@ const selectCategory = (categoryId: number | null) => {
     <h2 class="mb-6 text-2xl font-bold text-black">Categories</h2>
 
     <ul class="space-y-2">
-      <!-- <li>
+      <li>
         <ButtonCategory
           :is-active="!productsStore.selectedCategory"
           name="All Categories"
@@ -30,14 +30,14 @@ const selectCategory = (categoryId: number | null) => {
         />
       </li>
 
-      <li v-for="category in productsStore.categories" :key="category.id">
+      <li v-for="category in categories" :key="category.id">
         <ButtonCategory
           :is-active="productsStore.selectedCategory === category.id"
           :name="category.name"
-          :count="productsStore.productsCount"
+          :count="productsCount"
           @select-category="selectCategory(category.id!)"
         />
-      </li> -->
+      </li>
     </ul>
   </div>
 </template>
