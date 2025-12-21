@@ -29,12 +29,17 @@ const handleAddToCart = async () => {
     <!-- Изображение товара -->
     <router-link :to="{ ...PRODUCT_DETAIL_LINK, params: { id: product.id } }">
       <div class="aspect-square overflow-hidden bg-gray-100">
-        <img
+        <nuxt-img
+          v-if="product.image_url"
           :src="product.image_url"
           :alt="product.name"
           class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-          @error="handleImageError"
+          placeholder
+          width="262"
+          height="262"
+          format="webp"
         />
+        <nuxt-img v-else :src="noImage()" alt="No image" placeholder width="262" height="262" format="webp" />
       </div>
     </router-link>
 

@@ -1,1 +1,1 @@
-export * from './errorImage'
+export * from './useErrorImage'

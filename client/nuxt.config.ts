@@ -12,6 +12,9 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
   ],
+  image: {
+    format: ['webp'],
+  },
   imports: {
     dirs: ['~/composables/**'],
   },
