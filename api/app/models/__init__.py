@@ -1,5 +1,6 @@
-__all__ = ("Base", "Category", "Product")
+__all__ = ("Base", "Category", "Product", "User")
 
 from .base import Base
 from .category import Category
 from .product import Product
+from .user import User
