@@ -33,7 +33,7 @@ class GetCartRequest(BaseModel):
 @router.post("/add/", status_code=status.HTTP_200_OK)
 async def add_to_cart(
     request: AddToCartRequest,
-    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
 ):
     service = CartService(session)
     item = CartItemCreate(product_id=request.product_id, quantity=request.quantity)
@@ -44,7 +44,7 @@ async def add_to_cart(
 @router.post("/", response_model=CartResponse, status_code=status.HTTP_200_OK)
 async def get_cart(
     request: GetCartRequest,
-    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
 ):
     service = CartService(session)
     return await service.get_cart_details(request.cart)
@@ -53,7 +53,7 @@ async def get_cart(
 @router.put("/update/", status_code=status.HTTP_200_OK)
 async def update_cart_item(
     request: UpdateCartRequest,
-    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
 ):
     service = CartService(session)
     item = CartItemUpdate(product_id=request.product_id, quantity=request.quantity)
@@ -65,7 +65,7 @@ async def update_cart_item(
 async def remove_from_cart(
     product_id: int,
     request: RemoveFromCartRequest,
-    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
 ):
     service = CartService(session)
     updated_cart = await service.remove_from_cart(request.cart, product_id)

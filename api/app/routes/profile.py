@@ -14,7 +14,7 @@ router = APIRouter(tags=["Profile"])
 )
 async def get_profile(
     user_id: int,
-    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     service = ProfileService(session)
     return await service.get_profile_by_user_id(user_id)
@@ -23,7 +23,7 @@ async def get_profile(
 @router.post("/", response_model=ProfileResponse, status_code=status.HTTP_201_CREATED)
 async def create_profile(
     profile_data: ProfileCreate,
-    session: AsyncSession = Depends(db_helper.session_getter),
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     service = ProfileService(session)
     return await service.create_profile(profile_data)
@@ -32,7 +32,7 @@ async def create_profile(
 @router.put("/", response_model=ProfileResponse, status_code=status.HTTP_200_OK)
 async def update_profile(
     profile_data: ProfileUpdate,
-    session: AsyncSession = Depends(db_helper.session_getter),
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     service = ProfileService(session)
     return await service.update_profile(profile_data)

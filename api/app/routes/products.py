@@ -11,7 +11,7 @@ router = APIRouter(tags=["Products"])
 
 @router.get("/", response_model=ProductListResponse, status_code=status.HTTP_200_OK)
 async def get_products(
-    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
 ):
     service = ProductService(session)
     return await service.get_all_products()
@@ -22,7 +22,7 @@ async def get_products(
 )
 async def get_product(
     product_id: int,
-    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
 ):
     service = ProductService(session)
     return await service.get_product_by_id(product_id)
@@ -35,7 +35,7 @@ async def get_product(
 )
 async def get_products_by_category(
     category_id: int,
-    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
 ):
     service = ProductService(session)
     return await service.get_products_by_category(category_id)
@@ -44,7 +44,7 @@ async def get_products_by_category(
 @router.post("/", response_model=ProductResponse, status_code=status.HTTP_201_CREATED)
 async def create_product(
     product_data: ProductCreate,
-    session: AsyncSession = Depends(db_helper.session_getter),
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     service = ProductService(session)
     return await service.create_product(product_data)
