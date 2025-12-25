@@ -12,6 +12,7 @@ class ApiPrefix(BaseModel):
     prefix: str = "/api"
     cart: str = "/cart"
     categories: str = "/categories"
+    users: str = "/users"
     products: str = "/products"
     docs: str = "/api/docs"
     redoc: str = "/api/redoc"

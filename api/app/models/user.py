@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class User(Base):
     username: Mapped[str] = mapped_column(String(32), unique=True)
-    password: Mapped[bytes] = mapped_column()
+    password: Mapped[str] = mapped_column()
     email: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
     active: Mapped[bool] = mapped_column(default=True)
 

@@ -1,17 +1,18 @@
 from typing import Annotated
 from annotated_types import MinLen, MaxLen
-from pydantic import BaseModel, EmailStr, ConfigDict
+from pydantic import BaseModel, EmailStr, ConfigDict, Field
 
 
 class CreateUser(BaseModel):
     username: Annotated[str, MinLen(3), MaxLen(20)]
     email: EmailStr
+    password: str
 
 
-class UserSchema(BaseModel):
-    model_config = ConfigDict(strict=True)
+class UserResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
 
+    id: int = Field(..., description="Unique category identifier")
     username: str
-    password: bytes
-    email: EmailStr | None = None
-    active: bool = True
+    email: EmailStr
+    active: bool
