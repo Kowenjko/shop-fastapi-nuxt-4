@@ -6,6 +6,9 @@ from app.core.db_helper import db_helper
 from app.services.profile_service import ProfileService
 from app.schemas.profile import ProfileCreate, ProfileResponse, ProfileUpdate
 
+from app.models import Profile
+from app.services.dependencies import profile_by_id
+
 router = APIRouter(tags=["Profile"])
 
 
@@ -13,11 +16,9 @@ router = APIRouter(tags=["Profile"])
     "/{user_id}/", response_model=ProfileResponse, status_code=status.HTTP_200_OK
 )
 async def get_profile(
-    user_id: int,
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    profile: Profile = Depends(profile_by_id),
 ):
-    service = ProfileService(session)
-    return await service.get_profile_by_user_id(user_id)
+    return profile
 
 
 @router.post("/", response_model=ProfileResponse, status_code=status.HTTP_201_CREATED)
@@ -29,10 +30,13 @@ async def create_profile(
     return await service.create_profile(profile_data)
 
 
-@router.put("/", response_model=ProfileResponse, status_code=status.HTTP_200_OK)
+@router.put(
+    "/{user_id}/", response_model=ProfileResponse, status_code=status.HTTP_200_OK
+)
 async def update_profile(
     profile_data: ProfileUpdate,
+    profile: Profile = Depends(profile_by_id),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     service = ProfileService(session)
-    return await service.update_profile(profile_data)
+    return await service.update_profile(profile, profile_data)
