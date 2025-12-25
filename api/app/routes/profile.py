@@ -1,0 +1,38 @@
+from typing import Annotated
+from fastapi import APIRouter, Depends, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.db_helper import db_helper
+from app.services.profile_service import ProfileService
+from app.schemas.profile import ProfileCreate, ProfileResponse, ProfileUpdate
+
+router = APIRouter(tags=["Profile"])
+
+
+@router.get(
+    "/{user_id}/", response_model=ProfileResponse, status_code=status.HTTP_200_OK
+)
+async def get_profile(
+    user_id: int,
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+):
+    service = ProfileService(session)
+    return await service.get_profile_by_user_id(user_id)
+
+
+@router.post("/", response_model=ProfileResponse, status_code=status.HTTP_201_CREATED)
+async def create_profile(
+    profile_data: ProfileCreate,
+    session: AsyncSession = Depends(db_helper.session_getter),
+):
+    service = ProfileService(session)
+    return await service.create_profile(profile_data)
+
+
+@router.put("/", response_model=ProfileResponse, status_code=status.HTTP_200_OK)
+async def update_profile(
+    profile_data: ProfileUpdate,
+    session: AsyncSession = Depends(db_helper.session_getter),
+):
+    service = ProfileService(session)
+    return await service.update_profile(profile_data)

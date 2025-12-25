@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, ConfigDict
+from .user import UserResponse
 
 
 class ProfileBase(BaseModel):
@@ -22,3 +23,5 @@ class ProfileResponse(ProfileBase):
 
     id: int = Field(..., description="Unique profile ID")
     user_id: int = Field(..., description="User ID")
+
+    user: UserResponse = Field(..., description="Associated user details")
