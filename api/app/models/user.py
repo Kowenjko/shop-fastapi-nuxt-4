@@ -6,7 +6,7 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 if TYPE_CHECKING:
-    from app.models import Profile
+    from app.models import Profile, Order
 
 
 class User(Base):
@@ -17,6 +17,7 @@ class User(Base):
 
     # posts: Mapped[list["Post"]] = relationship(back_populates="user")
     profile: Mapped["Profile"] = relationship(back_populates="user")
+    order: Mapped["Order"] = relationship(back_populates="user")
 
     def __str__(self):
         return f"{self.__class__.__name__}(id={self.id}, username={self.username!r})"
