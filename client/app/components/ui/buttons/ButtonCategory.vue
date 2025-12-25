@@ -9,8 +9,8 @@ const selectCategory = () => emit('selectCategory')
   <button
     @click="selectCategory"
     :class="[
-      'w-full text-left px-4 py-3 rounded-lg transition-all duration-200',
-      isActive ? 'bg-black text-white font-semibold' : 'bg-gray-50 hover:bg-gray-100 text-gray-700',
+      'w-full cursor-pointer rounded-lg px-4 py-3 text-left transition-all duration-200',
+      isActive ? 'bg-black font-semibold text-white' : 'bg-gray-50 text-gray-700 hover:bg-gray-100',
     ]"
   >
     {{ name }}

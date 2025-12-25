@@ -14,7 +14,7 @@ const {
 <template>
   <nuxt-link
     :to="to"
-    class="relative flex items-center space-x-2 font-medium text-gray-700 transition-colors hover:text-black"
+    class="relative flex cursor-pointer items-center space-x-2 font-medium text-gray-700 transition-colors hover:text-black"
   >
     <slot />
 

@@ -20,7 +20,7 @@ const clearFilter = () => emit('clearFilter')
     <button
       v-if="selectedCategory"
       @click="clearFilter"
-      class="text-sm text-gray-500 hover:text-black transition-colors font-medium"
+      class="cursor-pointer text-sm font-medium text-gray-500 transition-colors hover:text-black"
     >
       Clear filter
     </button>

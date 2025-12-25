@@ -59,7 +59,7 @@ const addToCart = () => emit('addToCart')
           <button
             @click="addToCart"
             :disabled="adding"
-            class="w-full rounded-none bg-black px-6 py-4 text-lg font-semibold text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
+            class="w-full cursor-pointer rounded-none bg-black px-6 py-4 text-lg font-semibold text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {{ adding ? 'Adding to cart...' : 'Add to Cart' }}
           </button>
