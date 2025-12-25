@@ -1,3 +1,3 @@
 __all__ = "UserRelationMixin"
 
-from .mixins import UserRelationMixin
+from .user_relation import UserRelationMixin

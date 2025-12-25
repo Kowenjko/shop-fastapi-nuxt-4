@@ -5,6 +5,7 @@ __all__ = (
     "User",
     "Profile",
     "Order",
+    "Post",
     "OrderProductAssociation",
 )
 
@@ -14,4 +15,5 @@ from .product import Product
 from .user import User
 from .profile import Profile
 from .order import Order
+from .post import Post
 from .order_product_association import OrderProductAssociation
