@@ -15,7 +15,7 @@ router = APIRouter(tags=["Users"])
     status_code=status.HTTP_200_OK,
 )
 async def get_all_users(
-    session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
     username: str | None = None,
 ):
     user_service = UserService(session)
@@ -28,7 +28,7 @@ async def get_all_users(
 @router.get("/{user_id}/", response_model=UserResponse, status_code=status.HTTP_200_OK)
 async def get_user(
     user_id: int,
-    session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     service = UserService(session)
     return await service.get_user_by_id(user_id)
@@ -37,7 +37,7 @@ async def get_user(
 @router.post("/", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def create_user(
     user_data: CreateUser,
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: AsyncSession = Depends(db_helper.session_getter),
 ):
     service = UserService(session)
     return await service.create_user(user_data)

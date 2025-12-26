@@ -22,17 +22,3 @@ async def profile_by_id(
             detail=f"Profile for user id {user_id} not found",
         )
     return profile
-
-
-async def user_by_id(
-    user_id: Annotated[int, Path],
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-) -> User:
-    repository = UserRepository(session)
-    user = await repository.get_by_id(user_id)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"User with id {user_id} not found",
-        )
-    return user
