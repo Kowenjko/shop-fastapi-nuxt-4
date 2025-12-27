@@ -2,8 +2,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Order
-from app.models.enums import OrderStatus
-from sqlalchemy.orm import selectinload
+from app.enums import OrderStatus
 
 from app.repositories.order_repository import OrderRepository
 from app.models.order_product_association import OrderProductAssociation

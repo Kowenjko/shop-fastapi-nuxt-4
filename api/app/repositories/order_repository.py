@@ -5,14 +5,12 @@ from sqlalchemy.orm import selectinload
 from app.models.order import Order
 from app.models.product import Product
 from app.models.order_product_association import OrderProductAssociation
-from app.models.enums import OrderStatus
+from app.enums import OrderStatus
 
 
 class OrderRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
-
-    # -------- Orders --------
 
     async def create(self, user_id: int, promocode: str | None = None):
         order = Order(
@@ -73,8 +71,6 @@ class OrderRepository:
 
     async def delete(self, order: Order) -> None:
         await self.session.delete(order)
-
-    # -------- Products in Order --------
 
     async def add_product(
         self,
@@ -145,9 +141,3 @@ class OrderRepository:
         order.products_details = [
             assoc for assoc in order.products_details if assoc.product_id != product_id
         ]
-
-    async def delete_all_products(self, order_id: int) -> None:
-        stmt = delete(OrderProductAssociation).where(
-            OrderProductAssociation.order_id == order_id
-        )
-        await self.session.execute(stmt)

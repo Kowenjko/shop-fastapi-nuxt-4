@@ -2,7 +2,7 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 from typing import List, Optional
 
-from app.models.enums import OrderStatus
+from app.enums import OrderStatus
 
 
 class OrderBase(BaseModel):
