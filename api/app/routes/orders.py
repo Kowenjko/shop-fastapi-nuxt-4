@@ -5,25 +5,25 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db_helper import db_helper
 from app.services.order_service import OrderService
 from app.schemas.order import (
-    OrderProductsAddSchema,
-    OrderReadSchema,
-    OrderSummarySchema,
-    OrderCreateSchema,
-    OrderProductUpdateSchema,
-    AddProductRequest,
-    UpdateProductRequest,
-    RemoveProductRequest,
-    CancelOrderRequest,
-    CheckoutRequest,
-    OrderProductsReplaceSchema,
+    OrderProductsAdd,
+    OrderResponse,
+    OrderUserResponse,
+    OrderCreate,
+    OrderProductUpdate,
+    AddProduct,
+    UpdateProduct,
+    RemoveProduct,
+    CancelOrder,
+    CheckoutOrder,
+    OrderProductsReplace,
 )
 
 router = APIRouter(tags=["Orders"])
 
 
-@router.post("/", response_model=OrderReadSchema, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
 async def create_order(
-    data: OrderCreateSchema,
+    data: OrderCreate,
     user_id: int,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
@@ -33,7 +33,7 @@ async def create_order(
 
 @router.get(
     "/{order_id}/",
-    response_model=OrderReadSchema,
+    response_model=OrderResponse,
     status_code=status.HTTP_200_OK,
 )
 async def get_order(
@@ -46,7 +46,7 @@ async def get_order(
 
 @router.get(
     "/user/{user_id}/",
-    response_model=list[OrderSummarySchema],
+    response_model=list[OrderUserResponse],
     status_code=status.HTTP_200_OK,
 )
 async def get_user_orders(
@@ -59,11 +59,11 @@ async def get_user_orders(
 
 @router.post(
     "/product/",
-    response_model=OrderReadSchema,
+    response_model=OrderResponse,
     status_code=status.HTTP_200_OK,
 )
 async def add_product_to_order(
-    data: AddProductRequest,
+    data: AddProduct,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     service = OrderService(session)
@@ -76,11 +76,11 @@ async def add_product_to_order(
 
 @router.post(
     "/products",
-    response_model=OrderReadSchema,
+    response_model=OrderResponse,
     status_code=status.HTTP_200_OK,
 )
 async def add_products_to_order(
-    data: OrderProductsAddSchema,
+    data: OrderProductsAdd,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     service = OrderService(session)
@@ -89,11 +89,11 @@ async def add_products_to_order(
 
 @router.put(
     "/products",
-    response_model=OrderReadSchema,
+    response_model=OrderResponse,
     status_code=status.HTTP_200_OK,
 )
 async def replace_products_in_order(
-    data: OrderProductsReplaceSchema,
+    data: OrderProductsReplace,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     service = OrderService(session)
@@ -102,28 +102,28 @@ async def replace_products_in_order(
 
 @router.patch(
     "/products/",
-    response_model=OrderReadSchema,
+    response_model=OrderResponse,
     status_code=status.HTTP_200_OK,
 )
 async def update_product_count(
-    data: UpdateProductRequest,
+    data: UpdateProduct,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     service = OrderService(session)
     return await service.update_product_count(
         order_id=data.order_id,
         product_id=data.product_id,
-        data=OrderProductUpdateSchema(count=data.count),
+        data=OrderProductUpdate(count=data.count),
     )
 
 
 @router.delete(
     "/products/",
-    response_model=OrderReadSchema,
+    response_model=OrderResponse,
     status_code=status.HTTP_200_OK,
 )
 async def remove_product_from_order(
-    data: RemoveProductRequest,
+    data: RemoveProduct,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     service = OrderService(session)
@@ -135,11 +135,11 @@ async def remove_product_from_order(
 
 @router.post(
     "/checkout/",
-    response_model=OrderReadSchema,
+    response_model=OrderResponse,
     status_code=status.HTTP_200_OK,
 )
 async def checkout_order(
-    data: CheckoutRequest,
+    data: CheckoutOrder,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     service = OrderService(session)
@@ -148,11 +148,11 @@ async def checkout_order(
 
 @router.post(
     "/cancel/",
-    response_model=OrderReadSchema,
+    response_model=OrderResponse,
     status_code=status.HTTP_200_OK,
 )
 async def cancel_order(
-    data: CancelOrderRequest,
+    data: CancelOrder,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     service = OrderService(session)

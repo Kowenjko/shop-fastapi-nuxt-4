@@ -9,13 +9,13 @@ from app.repositories.order_repository import OrderRepository
 from app.models.order_product_association import OrderProductAssociation
 from app.repositories.product_repository import ProductRepository
 from app.schemas.order import (
-    OrderReadSchema,
-    OrderSummarySchema,
-    OrderCreateSchema,
-    OrderProductUpdateSchema,
-    OrderItemSchema,
-    OrderProductsAddSchema,
-    OrderProductsReplaceSchema,
+    OrderResponse,
+    OrderUserResponse,
+    OrderCreate,
+    OrderProductUpdate,
+    OrderItem,
+    OrderProductsAdd,
+    OrderProductsReplace,
 )
 
 
@@ -27,17 +27,15 @@ class OrderService:
 
     # -------- Orders --------
 
-    async def create_order(
-        self, user_id: int, data: OrderCreateSchema
-    ) -> OrderReadSchema:
+    async def create_order(self, user_id: int, data: OrderCreate) -> OrderResponse:
         order = await self.order_repository.create(user_id, promocode=data.promocode)
         await self.session.commit()
         order = await self.order_repository.get_by_id(
             order.id, load_products=True, for_update=False
         )
-        return self._to_order_read_schema(order)
+        return self._to_order_response(order)
 
-    async def get_order_by_id(self, order_id: int) -> OrderReadSchema:
+    async def get_order_by_id(self, order_id: int) -> OrderResponse:
         order = await self.order_repository.get_by_id(
             order_id, load_products=True, for_update=False
         )
@@ -48,15 +46,16 @@ class OrderService:
                 detail=f"Order with id {order_id} not found",
             )
 
-        return self._to_order_read_schema(order)
+        return self._to_order_response(order)
 
-    async def get_user_orders(self, user_id: int) -> list[OrderSummarySchema]:
+    async def get_user_orders(self, user_id: int) -> list[OrderUserResponse]:
         orders = await self.order_repository.get_by_user(user_id)
 
         return [
-            OrderSummarySchema(
+            OrderUserResponse(
                 id=order.id,
                 status=order.status,
+                items=self._to_order_items(order),
                 total_items=order.total_items,
                 total_price=order.total_price,
             )
@@ -70,7 +69,7 @@ class OrderService:
         order_id: int,
         product_id: int,
         count: int = 1,
-    ) -> OrderReadSchema:
+    ) -> OrderResponse:
 
         order = await self.order_repository.get_by_id(
             order_id,
@@ -103,12 +102,12 @@ class OrderService:
 
         await self.session.commit()
 
-        return self._to_order_read_schema(order)
+        return self._to_order_response(order)
 
     async def add_products_to_order(
         self,
-        data: OrderProductsAddSchema,
-    ) -> OrderReadSchema:
+        data: OrderProductsAdd,
+    ) -> OrderResponse:
 
         order = await self.order_repository.get_by_id(
             data.order_id,
@@ -148,14 +147,14 @@ class OrderService:
 
         await self.session.commit()
 
-        return self._to_order_read_schema(order)
+        return self._to_order_response(order)
 
     async def update_product_count(
         self,
         order_id: int,
         product_id: int,
-        data: OrderProductUpdateSchema,
-    ) -> OrderReadSchema:
+        data: OrderProductUpdate,
+    ) -> OrderResponse:
         order = await self.order_repository.get_by_id(
             order_id, load_products=True, for_update=False
         )
@@ -185,13 +184,13 @@ class OrderService:
 
         await self.session.commit()
 
-        return self._to_order_read_schema(order)
+        return self._to_order_response(order)
 
     async def remove_product_from_order(
         self,
         order_id: int,
         product_id: int,
-    ) -> OrderReadSchema:
+    ) -> OrderResponse:
 
         order = await self.order_repository.get_by_id(
             order_id,
@@ -210,9 +209,9 @@ class OrderService:
 
         await self.session.commit()
 
-        return self._to_order_read_schema(order)
+        return self._to_order_response(order)
 
-    async def cancel_order(self, user_id: int, order_id: int) -> OrderReadSchema:
+    async def cancel_order(self, user_id: int, order_id: int) -> OrderResponse:
         order = await self.order_repository.get_by_id(
             order_id,
             load_products=True,
@@ -240,9 +239,9 @@ class OrderService:
         order.status = OrderStatus.CANCELED
 
         await self.session.commit()
-        return self._to_order_read_schema(order)
+        return self._to_order_response(order)
 
-    async def checkout_order(self, user_id: int, order_id: int) -> OrderReadSchema:
+    async def checkout_order(self, user_id: int, order_id: int) -> OrderResponse:
         order = await self.order_repository.get_by_id(
             order_id,
             load_products=True,
@@ -276,12 +275,12 @@ class OrderService:
         order.status = OrderStatus.PAID
 
         await self.session.commit()
-        return self._to_order_read_schema(order)
+        return self._to_order_response(order)
 
     async def replace_products_in_order(
         self,
-        data: OrderProductsReplaceSchema,
-    ) -> OrderReadSchema:
+        data: OrderProductsReplace,
+    ) -> OrderResponse:
 
         order = await self.order_repository.get_by_id(
             data.order_id,
@@ -319,7 +318,7 @@ class OrderService:
 
         await self.session.commit()
 
-        return self._to_order_read_schema(order)
+        return self._to_order_response(order)
 
     # -------- Mapper --------
 
@@ -330,9 +329,9 @@ class OrderService:
                 detail=f"Order in status '{order.status}' cannot be modified",
             )
 
-    def _to_order_read_schema(self, order) -> OrderReadSchema:
+    def _to_order_items(self, order) -> list[OrderItem]:
         items = [
-            OrderItemSchema.model_validate(
+            OrderItem.model_validate(
                 {
                     "product_id": item.product.id,
                     "name": item.product.name,
@@ -344,7 +343,11 @@ class OrderService:
             for item in order.products_details
             if item.product is not None
         ]
-        return OrderReadSchema.model_validate(
+        return items
+
+    def _to_order_response(self, order) -> OrderResponse:
+
+        return OrderResponse.model_validate(
             {
                 "id": order.id,
                 "promocode": order.promocode,
@@ -352,6 +355,6 @@ class OrderService:
                 "created_at": order.created_at,  # добавлено
                 "total_items": order.total_items,
                 "total_price": order.total_price,
-                "items": items,
+                "items": self._to_order_items(order),
             }
         )

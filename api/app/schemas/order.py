@@ -5,10 +5,12 @@ from typing import List, Optional
 from app.models.enums import OrderStatus
 
 
-# -------- Products inside Order --------
+class OrderBase(BaseModel):
+    status: OrderStatus = Field(..., description="Order status")
+    promocode: Optional[str] = Field(None, description="Promocode applied to the order")
 
 
-class OrderItemSchema(BaseModel):
+class OrderItem(BaseModel):
     product_id: int
     name: str
     unit_price: int
@@ -18,16 +20,11 @@ class OrderItemSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-# -------- Order --------
-
-
-class OrderReadSchema(BaseModel):
+class OrderResponse(OrderBase):
     id: int
-    status: OrderStatus
-    promocode: Optional[str]
     created_at: datetime
 
-    items: List[OrderItemSchema]
+    items: List[OrderItem]
 
     total_items: int
     total_price: int
@@ -35,74 +32,61 @@ class OrderReadSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class OrderSummarySchema(BaseModel):
+class OrderUserResponse(BaseModel):
     id: int
     status: OrderStatus
+    items: List[OrderItem]
     total_items: int
     total_price: int
 
+    model_config = ConfigDict(from_attributes=True)
 
-# -------- Create / Update --------
 
-
-class OrderCreateSchema(BaseModel):
+class OrderCreate(BaseModel):
     promocode: Optional[str] = None
 
 
-class OrderProductUpdateSchema(BaseModel):
+class OrderProductUpdate(BaseModel):
     count: int
 
 
-class AddProductRequest(BaseModel):
+class AddProduct(BaseModel):
     user_id: int
     order_id: int
     product_id: int
     count: int = Field(..., ge=1)
 
 
-class OrderProductAddItemSchema(BaseModel):
-    product_id: int
-    count: int = Field(gt=0)
-
-
-class OrderProductsAddSchema(BaseModel):
-    order_id: int
-    products: list[OrderProductAddItemSchema]
-
-
-class OrderProductCreate(BaseModel):
-    product_id: int
-    count: int = Field(gt=0)
-
-
-class OrderProductReplaceItemSchema(BaseModel):
-    product_id: int
-    count: int = Field(gt=0)
-
-
-class OrderProductsReplaceSchema(BaseModel):
-    order_id: int
-    products: list[OrderProductReplaceItemSchema]
-
-
-class UpdateProductRequest(BaseModel):
-    user_id: int
-    order_id: int
-    product_id: int
+class UpdateProduct(AddProduct):
     count: int = Field(..., ge=0)
 
 
-class RemoveProductRequest(BaseModel):
-    user_id: int
-    order_id: int
+class OrderProductBase(BaseModel):
     product_id: int
+    count: int = Field(gt=0)
 
 
-class CancelOrderRequest(BaseModel):
+class OrderProductsAdd(BaseModel):
+    order_id: int
+    products: list[OrderProductBase]
+
+
+class OrderProductsReplace(OrderProductsAdd):
+    pass
+
+
+class UserOrderBase(BaseModel):
     user_id: int
     order_id: int
 
 
-class CheckoutRequest(BaseModel):
-    user_id: int
-    order_id: int
+class CancelOrder(UserOrderBase):
+    pass
+
+
+class CheckoutOrder(UserOrderBase):
+    pass
+
+
+class RemoveProduct(UserOrderBase):
+    product_id: int
