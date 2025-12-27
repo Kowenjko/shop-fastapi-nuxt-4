@@ -25,8 +25,6 @@ class OrderService:
         self.order_repository = OrderRepository(session)
         self.product_repository = ProductRepository(session)
 
-    # -------- Orders --------
-
     async def create_order(self, user_id: int, data: OrderCreate) -> OrderResponse:
         order = await self.order_repository.create(user_id, promocode=data.promocode)
         await self.session.commit()
@@ -40,12 +38,7 @@ class OrderService:
             order_id, load_products=True, for_update=False
         )
 
-        if not order:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Order with id {order_id} not found",
-            )
-
+        self._not_order(order)
         return self._to_order_response(order)
 
     async def get_user_orders(self, user_id: int) -> list[OrderUserResponse]:
@@ -62,8 +55,6 @@ class OrderService:
             for order in orders
         ]
 
-    # -------- Products in Order --------
-
     async def add_product_to_order(
         self,
         order_id: int,
@@ -77,16 +68,13 @@ class OrderService:
             for_update=True,
         )
 
-        if not order:
-            raise HTTPException(status_code=404, detail="Order not found")
-
+        self._not_order(order)
         self._ensure_draft(order)
 
         product = await self.product_repository.get_by_id(product_id)
         if not product:
             raise HTTPException(status_code=404, detail="Product not found")
 
-        # ---- работа ТОЛЬКО с order.products_details
         for assoc in order.products_details:
             if assoc.product_id == product_id:
                 assoc.count += count
@@ -115,9 +103,7 @@ class OrderService:
             for_update=True,
         )
 
-        if not order:
-            raise HTTPException(status_code=404, detail="Order not found")
-
+        self._not_order(order)
         self._ensure_draft(order)
 
         product_ids = [p.product_id for p in data.products]
@@ -159,12 +145,7 @@ class OrderService:
             order_id, load_products=True, for_update=False
         )
 
-        if not order:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Order not found",
-            )
-
+        self._not_order(order)
         self._ensure_draft(order)
 
         if data.count < 0:
@@ -184,97 +165,6 @@ class OrderService:
 
         await self.session.commit()
 
-        return self._to_order_response(order)
-
-    async def remove_product_from_order(
-        self,
-        order_id: int,
-        product_id: int,
-    ) -> OrderResponse:
-
-        order = await self.order_repository.get_by_id(
-            order_id,
-            load_products=True,
-        )
-
-        if not order:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Order not found",
-            )
-
-        self._ensure_draft(order)
-
-        await self.order_repository.remove_product(order, product_id)
-
-        await self.session.commit()
-
-        return self._to_order_response(order)
-
-    async def cancel_order(self, user_id: int, order_id: int) -> OrderResponse:
-        order = await self.order_repository.get_by_id(
-            order_id,
-            load_products=True,
-        )
-
-        if not order:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Order not found",
-            )
-
-        if order.user_id != user_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You cannot cancel someone else's order",
-            )
-
-        if order.status != OrderStatus.DRAFT:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Only draft orders can be canceled",
-            )
-
-        # Меняем статус на CANCELED
-        order.status = OrderStatus.CANCELED
-
-        await self.session.commit()
-        return self._to_order_response(order)
-
-    async def checkout_order(self, user_id: int, order_id: int) -> OrderResponse:
-        order = await self.order_repository.get_by_id(
-            order_id,
-            load_products=True,
-        )
-
-        if not order:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Order not found",
-            )
-
-        if order.user_id != user_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="You cannot checkout someone else's order",
-            )
-
-        if order.status != OrderStatus.DRAFT:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Only draft orders can be checked out",
-            )
-
-        if not order.products_details:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Cannot checkout an empty order",
-            )
-
-        # Меняем статус на PAID
-        order.status = OrderStatus.PAID
-
-        await self.session.commit()
         return self._to_order_response(order)
 
     async def replace_products_in_order(
@@ -304,7 +194,6 @@ class OrderService:
                 detail=f"Products not found: {list(missing)}",
             )
 
-        # 🔥 Ключевая строка — ORM сам сделает DELETE
         order.products_details.clear()
 
         order.products_details.extend(
@@ -320,16 +209,89 @@ class OrderService:
 
         return self._to_order_response(order)
 
-    # -------- Mapper --------
+    async def remove_product_from_order(
+        self,
+        order_id: int,
+        product_id: int,
+    ) -> OrderResponse:
 
-    def _ensure_draft(self, order):
+        order = await self.order_repository.get_by_id(
+            order_id,
+            load_products=True,
+        )
+
+        self._not_order(order)
+        self._ensure_draft(order)
+
+        await self.order_repository.remove_product(order, product_id)
+        await self.session.commit()
+        return self._to_order_response(order)
+
+    async def cancel_order(self, user_id: int, order_id: int) -> OrderResponse:
+        order = await self.order_repository.get_by_id(
+            order_id,
+            load_products=True,
+        )
+
+        self._not_order(order)
+        self._not_access(order, user_id)
+        self._ensure_draft(order)
+
+        if order.status != OrderStatus.DRAFT:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Only draft orders can be canceled",
+            )
+
+        order.status = OrderStatus.CANCELED
+
+        await self.session.commit()
+        return self._to_order_response(order)
+
+    async def checkout_order(self, user_id: int, order_id: int) -> OrderResponse:
+        order = await self.order_repository.get_by_id(
+            order_id,
+            load_products=True,
+        )
+
+        self._not_order(order)
+        self._not_access(order, user_id)
+        self._ensure_draft(order)
+
+        if not order.products_details:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Cannot checkout an empty order",
+            )
+
+        # Меняем статус на PAID
+        order.status = OrderStatus.PAID
+
+        await self.session.commit()
+        return self._to_order_response(order)
+
+    def _not_order(self, order: Order):
+        if not order:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Order not found",
+            )
+
+    def _not_access(self, order: Order, user_id: int):
+        if order.user_id != user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="User does not have access to order",
+            )
+
+    def _ensure_draft(self, order: Order):
         if order.status != OrderStatus.DRAFT:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail=f"Order in status '{order.status}' cannot be modified",
             )
 
-    def _to_order_items(self, order) -> list[OrderItem]:
+    def _to_order_items(self, order: Order) -> list[OrderItem]:
         items = [
             OrderItem.model_validate(
                 {
@@ -345,7 +307,7 @@ class OrderService:
         ]
         return items
 
-    def _to_order_response(self, order) -> OrderResponse:
+    def _to_order_response(self, order: Order) -> OrderResponse:
 
         return OrderResponse.model_validate(
             {

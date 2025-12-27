@@ -15,20 +15,13 @@ class UserService:
 
     async def get_user_by_id(self, user_id: int) -> UserResponse:
         user = await self.repository.get_by_id(user_id)
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"User with id {user_id} not found",
-            )
+        self._not_user(user, str(user_id))
+
         return UserResponse.model_validate(user)
 
     async def get_user_by_name(self, username: str) -> UserResponse:
         user = await self.repository.get_by_username(username)
-        if not user:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"User with id {username} not found",
-            )
+        self._not_user(user, username)
         return UserResponse.model_validate(user)
 
     async def create_user(self, user_data: CreateUser) -> UserResponse:
@@ -47,3 +40,10 @@ class UserService:
 
         user = await self.repository.create(user_data)
         return UserResponse.model_validate(user)
+
+    def _not_user(self, user, text: str):
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User with id {text} not found",
+            )
