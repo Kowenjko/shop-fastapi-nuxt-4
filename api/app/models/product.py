@@ -23,12 +23,9 @@ class Product(Base):
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"))
     category: Mapped["Category"] = relationship(back_populates="products")
 
-    orders: Mapped[list["Order"]] = relationship(
-        secondary="order_product_association",
-        back_populates="products",
-    )
     orders_details: Mapped[list["OrderProductAssociation"]] = relationship(
         back_populates="product",
+        cascade="all, delete-orphan",
     )
 
     def __repr__(self):
