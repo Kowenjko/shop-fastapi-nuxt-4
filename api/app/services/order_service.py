@@ -24,6 +24,8 @@ class OrderService:
         self.order_repository = OrderRepository(session)
         self.product_repository = ProductRepository(session)
 
+    """Создать новый заказ пользователя."""
+
     async def create_order(self, user_id: int, data: OrderCreate) -> OrderResponse:
         order = await self.order_repository.create(user_id, promocode=data.promocode)
         await self.session.commit()
@@ -32,6 +34,8 @@ class OrderService:
         )
         return self._to_order_response(order)
 
+    """Получить заказ по ID."""
+
     async def get_order_by_id(self, order_id: int) -> OrderResponse:
         order = await self.order_repository.get_by_id(
             order_id, load_products=True, for_update=False
@@ -39,6 +43,8 @@ class OrderService:
 
         self._not_order(order)
         return self._to_order_response(order)
+
+    """Получить список заказов пользователя."""
 
     async def get_user_orders(self, user_id: int) -> list[OrderUserResponse]:
         orders = await self.order_repository.get_by_user(user_id)
@@ -53,6 +59,8 @@ class OrderService:
             )
             for order in orders
         ]
+
+    """Добавить продукт в заказ или увеличить его количество."""
 
     async def add_product_to_order(
         self,
@@ -90,6 +98,8 @@ class OrderService:
         await self.session.commit()
 
         return self._to_order_response(order)
+
+    """Добавить несколько продуктов в заказ."""
 
     async def add_products_to_order(
         self,
@@ -134,6 +144,8 @@ class OrderService:
 
         return self._to_order_response(order)
 
+    """Обновить количество продукта в заказе."""
+
     async def update_product_count(
         self,
         order_id: int,
@@ -165,6 +177,8 @@ class OrderService:
         await self.session.commit()
 
         return self._to_order_response(order)
+
+    """Полностью заменить список продуктов в заказе."""
 
     async def replace_products_in_order(
         self,
@@ -208,6 +222,8 @@ class OrderService:
 
         return self._to_order_response(order)
 
+    """Удалить продукт из заказа."""
+
     async def remove_product_from_order(
         self,
         order_id: int,
@@ -225,6 +241,8 @@ class OrderService:
         await self.order_repository.remove_product(order, product_id)
         await self.session.commit()
         return self._to_order_response(order)
+
+    """Отменить заказ пользователя."""
 
     async def cancel_order(self, user_id: int, order_id: int) -> OrderResponse:
         order = await self.order_repository.get_by_id(
@@ -246,6 +264,8 @@ class OrderService:
 
         await self.session.commit()
         return self._to_order_response(order)
+
+    """Оплатить (оформить) заказ."""
 
     async def checkout_order(self, user_id: int, order_id: int) -> OrderResponse:
         order = await self.order_repository.get_by_id(
@@ -269,12 +289,16 @@ class OrderService:
         await self.session.commit()
         return self._to_order_response(order)
 
+    """Проверка, что заказ существует."""
+
     def _not_order(self, order: Order):
         if not order:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Order not found",
             )
+
+    """Проверка прав доступа пользователя к заказу."""
 
     def _not_access(self, order: Order, user_id: int):
         if order.user_id != user_id:
@@ -283,12 +307,16 @@ class OrderService:
                 detail="User does not have access to order",
             )
 
+    """Проверка, что заказ находится в статусе DRAFT."""
+
     def _ensure_draft(self, order: Order):
         if order.status != OrderStatus.DRAFT:
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail=f"Order in status '{order.status}' cannot be modified",
             )
+
+    """Преобразовать продукты заказа в список OrderItem."""
 
     def _to_order_items(self, order: Order) -> list[OrderItem]:
         items = [
@@ -305,6 +333,8 @@ class OrderService:
             if item.product is not None
         ]
         return items
+
+    """Преобразовать заказ в OrderResponse."""
 
     def _to_order_response(self, order: Order) -> OrderResponse:
 

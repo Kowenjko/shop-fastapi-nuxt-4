@@ -12,6 +12,8 @@ class OrderRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 
+    """Создать новый заказ для пользователя с опциональным промокодом."""
+
     async def create(self, user_id: int, promocode: str | None = None):
         order = Order(
             user_id=user_id, promocode=promocode, status=OrderStatus.DRAFT.value
@@ -19,6 +21,8 @@ class OrderRepository:
         self.session.add(order)
         await self.session.flush()
         return order
+
+    """Получить заказ по ID, с возможностью подгрузки продуктов и блокировки."""
 
     async def get_by_id(
         self,
@@ -42,6 +46,8 @@ class OrderRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
+    """Получить все заказы пользователя, отсортированные по дате создания."""
+
     async def get_by_user(self, user_id: int) -> list[Order]:
         stmt = (
             select(Order)
@@ -56,6 +62,8 @@ class OrderRepository:
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
+    """Получить все заказы, отсортированные по дате создания."""
+
     async def get_all(self) -> list[Order]:
         stmt = (
             select(Order)
@@ -69,8 +77,12 @@ class OrderRepository:
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
+    """Удалить заказ из базы данных."""
+
     async def delete(self, order: Order) -> None:
         await self.session.delete(order)
+
+    """Добавить продукт к заказу с указанным количеством."""
 
     async def add_product(
         self,
@@ -87,6 +99,8 @@ class OrderRepository:
         self.session.add(association)
         await self.session.flush()
         return association
+
+    """Добавить несколько продуктов к заказу."""
 
     async def add_products(
         self,
@@ -110,6 +124,8 @@ class OrderRepository:
 
         return associations
 
+    """Получить ассоциацию продукта с заказом по ID заказа и продукта."""
+
     async def get_product(
         self,
         order_id: int,
@@ -122,6 +138,8 @@ class OrderRepository:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
 
+    """Обновить количество продукта в заказе."""
+
     async def update_product_count(
         self,
         order_id: int,
@@ -132,6 +150,8 @@ class OrderRepository:
         if association:
             association.count = count
             await self.session.flush()
+
+    """Удалить продукт из заказа."""
 
     async def remove_product(
         self,
