@@ -14,14 +14,16 @@ class ProfileCreate(ProfileBase):
     user_id: int = Field(..., description="User ID")
 
 
-class ProfileUpdate(ProfileBase):
+class ProfileUpdate(ProfileCreate):
     pass
 
 
-class ProfileResponse(ProfileBase):
-    model_config = ConfigDict(from_attributes=True)
+class ProfilePostResponse(ProfileBase):
 
     id: int = Field(..., description="Unique profile ID")
-    user_id: int = Field(..., description="User ID")
+    model_config = ConfigDict(from_attributes=True)
+
+
+class ProfileResponse(ProfilePostResponse):
 
     user: UserResponse = Field(..., description="Associated user details")

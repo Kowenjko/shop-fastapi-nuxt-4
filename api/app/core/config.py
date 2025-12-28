@@ -13,6 +13,7 @@ class ApiPrefix(BaseModel):
     cart: str = "/cart"
     categories: str = "/categories"
     users: str = "/users"
+    posts: str = "/posts"
     orders: str = "/orders"
     profile: str = "/profile"
     products: str = "/products"
