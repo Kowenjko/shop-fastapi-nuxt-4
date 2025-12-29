@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from fastapi import HTTPException, status
 
+from app.models import Product
 from app.schemas.paginate import PaginateBase
 
 from ..repositories.product_repository import ProductRepository
@@ -57,25 +58,6 @@ class ProductService:
         def build_link(page_number: int) -> str:
             query = urlencode({"page": page_number, "per_page": per_page})
             return f"{base_url}?{query}"
-
-        if not products:
-            return ProductListResponse(
-                products=[],
-                total=0,
-                meta=PaginateBase(
-                    page=page,
-                    per_page=per_page,
-                    total_items=total_items,
-                    total_pages=total_pages,
-                    prev_page=page - 1 if has_prev else None,
-                    next_page=page + 1 if has_next else None,
-                    links={
-                        "current": build_link(page),
-                        "next": build_link(page + 1) if has_next else None,
-                        "prev": build_link(page - 1) if has_prev else None,
-                    },
-                ),
-            )
 
         products_response = [ProductResponse.model_validate(prod) for prod in products]
 
