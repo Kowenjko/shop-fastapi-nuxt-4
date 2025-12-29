@@ -1,20 +1,46 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db_helper import db_helper
 from app.services.product_service import ProductService
-from app.schemas.product import ProductResponse, ProductListResponse, ProductCreate
+from app.schemas.product import (
+    ProductResponse,
+    ProductListResponse,
+    ProductCreate,
+    ProductMetaResponse,
+)
 
 router = APIRouter(tags=["Products"])
 
 
-@router.get("/", response_model=ProductListResponse, status_code=status.HTTP_200_OK)
+@router.get("/all", response_model=ProductListResponse, status_code=status.HTTP_200_OK)
 async def get_products(
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
 ):
     service = ProductService(session)
     return await service.get_all_products()
+
+
+@router.get(
+    "/",
+    response_model=ProductMetaResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_products_paginated(
+    request: Request,
+    page: int = 1,
+    per_page: int = 9,
+    session: AsyncSession = Depends(db_helper.session_getter),
+):
+    service = ProductService(session)
+    return await service.get_products_paginated(
+        base_url=str(
+            request.url.remove_query_params("page").remove_query_params("per_page")
+        ),
+        page=page,
+        per_page=per_page,
+    )
 
 
 @router.get(

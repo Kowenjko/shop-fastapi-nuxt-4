@@ -56,7 +56,7 @@ class PostService:
                 per_page=per_page,
                 total_items=total_items,
                 total_pages=total_pages,
-                previous_page=page - 1 if has_prev else None,
+                prev_page=page - 1 if has_prev else None,
                 next_page=page + 1 if has_next else None,
                 links={
                     "current": build_link(page),

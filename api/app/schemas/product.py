@@ -1,6 +1,8 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional, List
+
+from app.schemas.paginate import PaginateBase
 from .category import CategoryResponse
 
 
@@ -37,3 +39,7 @@ class ProductResponse(BaseModel):
 class ProductListResponse(BaseModel):
     products: List[ProductResponse]
     total: int = Field(..., description="Total number of products")
+
+
+class ProductMetaResponse(ProductListResponse):
+    meta: PaginateBase = Field(..., description="Paginate  pages")

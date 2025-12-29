@@ -15,7 +15,7 @@ class PaginateBase(BaseModel):
     total_items: Optional[int]
     total_pages: Optional[int]
 
-    previous_page: Optional[int]
+    prev_page: Optional[int]
     next_page: Optional[int]
 
     links: PaginationLinks
