@@ -1,7 +1,8 @@
-from typing import Optional
+from typing import List, Optional
 from pydantic import BaseModel, Field, ConfigDict
 from .user import UserResponse
 from .profile import ProfilePostResponse
+from .paginate import PaginateBase
 
 
 class PostBase(BaseModel):
@@ -25,3 +26,8 @@ class PostResponse(PostBase):
 
     user: UserResponse = Field(..., description="Associated user details")
     profile: ProfilePostResponse = Field(..., description="Associated profile details")
+
+
+class PostMetaResponse(BaseModel):
+    items: List[PostResponse]
+    meta: PaginateBase = Field(..., description="Paginate  pages")

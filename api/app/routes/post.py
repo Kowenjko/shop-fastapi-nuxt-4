@@ -1,22 +1,46 @@
-from typing import Annotated, List
-from fastapi import APIRouter, Depends, status
+from typing import Annotated, List, Optional
+from fastapi import APIRouter, Depends, Query, Request, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db_helper import db_helper
 from app.services.post_service import PostService
-from app.schemas.post import PostCreate, PostUpdate, PostResponse
+from app.schemas.post import PostCreate, PostUpdate, PostResponse, PostMetaResponse
 
 
 router = APIRouter(tags=["Posts"])
 
 
 # --- GET ---
-@router.get("/", response_model=List[PostResponse], status_code=status.HTTP_200_OK)
+@router.get("/all", response_model=List[PostResponse])
 async def get_posts(
     session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
+    limit: int = Query(50, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    user_ids: Optional[List[int]] = Query(None),
 ):
     service = PostService(session)
-    return await service.get_all_posts()
+    return await service.get_all_posts(limit=limit, offset=offset, user_ids=user_ids)
+
+
+@router.get(
+    "/",
+    response_model=PostMetaResponse,
+    status_code=status.HTTP_200_OK,
+)
+async def get_posts_paginated(
+    request: Request,
+    page: int = 1,
+    per_page: int = 10,
+    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+):
+    service = PostService(session)
+    return await service.get_posts_paginated(
+        base_url=str(
+            request.url.remove_query_params("page").remove_query_params("per_page")
+        ),
+        page=page,
+        per_page=per_page,
+    )
 
 
 @router.get("/{post_id}/", response_model=PostResponse, status_code=status.HTTP_200_OK)
