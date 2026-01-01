@@ -21,6 +21,7 @@ class ProfileRepository:
         stmt = (
             select(Profile)
             .options(joinedload(Profile.user))
+            .options(joinedload(Profile.city))
             .where(Profile.user_id == user_id)
         )
 

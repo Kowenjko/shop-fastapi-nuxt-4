@@ -7,7 +7,7 @@ from app.core.db_helper import db_helper
 
 from app.repositories.profile_repository import ProfileRepository
 
-from app.models import Post, Profile
+from app.models import Profile
 
 
 def _not_user(data, detail: str):
