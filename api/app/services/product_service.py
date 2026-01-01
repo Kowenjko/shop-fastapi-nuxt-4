@@ -4,8 +4,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
 from fastapi import HTTPException, status
 
+from fastapi_cache import FastAPICache
+
 from app.models import Product
 from app.schemas.paginate import PaginateBase
+from app.core.config import settings
 
 from ..repositories.product_repository import ProductRepository
 from ..repositories.category_repository import CategoryRepository
@@ -121,5 +124,8 @@ class ProductService:
 
         # Створюємо продукт
         product = await self.product_repository.create(product_data)
+
+        # очищаем cash(redis) после создания product
+        await FastAPICache.clear(settings.cache.namespace.products)
 
         return ProductResponse.model_validate(product)

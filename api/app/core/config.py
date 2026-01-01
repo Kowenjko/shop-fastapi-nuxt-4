@@ -38,6 +38,29 @@ class DatabaseConfig(BaseSettings):
     }
 
 
+class RedisDB(BaseModel):
+    cache: int = 0
+
+
+class RedisConfig(BaseModel):
+    host: str = "redis"
+    port: int = 6379
+    db: RedisDB = RedisDB()
+
+
+class CacheNamespace(BaseModel):
+    products: str = "products"
+    cities: str = "cities"
+    cities_regions: str = "cities-regions"
+    cities_districts: str = "cities-districts"
+    cities_communities: str = "cities-communities"
+
+
+class CacheConfig(BaseModel):
+    prefix: str = "fastapi-cache"
+    namespace: CacheNamespace = CacheNamespace()
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=(".env.template", ".env"),
@@ -63,6 +86,8 @@ class Settings(BaseSettings):
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig
+    redis: RedisConfig = RedisConfig()
+    cache: CacheConfig = CacheConfig()
 
 
 settings = Settings()

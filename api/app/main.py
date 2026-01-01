@@ -5,15 +5,29 @@ from app.core.config import settings
 from app.core.db_helper import db_helper
 from typing import AsyncGenerator
 
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.redis import RedisBackend
+
 from contextlib import asynccontextmanager
 
 from fastapi.responses import ORJSONResponse
 from app.routes import router as api_router
 
+from redis.asyncio import Redis
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # # startup
+    redis = Redis(
+        host=settings.redis.host,
+        port=settings.redis.port,
+        db=settings.redis.db.cache,
+    )
+    FastAPICache.init(
+        RedisBackend(redis),
+        prefix=settings.cache.prefix,
+    )
 
     yield
     # shutdown

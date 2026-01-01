@@ -1,6 +1,11 @@
 version: "3.9"
 
 services:
+  redis:
+      image: redis:8-alpine
+      container_name: redis
+      ports:
+        - '6379:6379'
   pg:
     image: postgres:18
     container_name: pg

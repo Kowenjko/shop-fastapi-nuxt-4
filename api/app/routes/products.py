@@ -11,6 +11,9 @@ from app.schemas.product import (
     ProductMetaResponse,
 )
 
+from fastapi_cache.decorator import cache
+from app.core.config import settings
+
 router = APIRouter(tags=["Products"])
 
 
@@ -27,6 +30,7 @@ async def get_products(
     response_model=ProductMetaResponse,
     status_code=status.HTTP_200_OK,
 )
+@cache(expire=300, namespace=settings.cache.namespace.products)  # 5 мин
 async def get_products_paginated(
     request: Request,
     page: int = 1,
