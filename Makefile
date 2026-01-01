@@ -281,6 +281,9 @@ seed:
 seed_cities:
 	$(API) uv run python run_seed_cities_batch.py
 
+xls_to_json:
+	$(API) uv run python seed/xlsx_to_json.py
+
 
 # --------------------------
 # PROD COMMANDS
