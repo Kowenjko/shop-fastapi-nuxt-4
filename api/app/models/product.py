@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 from sqlalchemy import ForeignKey, String, Text, Float
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from datetime import datetime
@@ -8,7 +8,6 @@ from .base import Base
 
 if TYPE_CHECKING:
     from .category import Category
-    from .order import Order
     from .order_product_association import OrderProductAssociation
 
 

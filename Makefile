@@ -278,6 +278,9 @@ downgrade:
 seed:
 	$(API) uv run python run_seed.py
 
+seed_cities:
+	$(API) uv run python run_seed_cities_batch.py
+
 
 # --------------------------
 # PROD COMMANDS

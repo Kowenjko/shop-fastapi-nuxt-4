@@ -6,7 +6,6 @@ class ProfileBase(BaseModel):
     first_name: str | None = Field(None, max_length=40, description="First name")
     last_name: str | None = Field(None, max_length=40, description="Last name")
     phone: str | None = Field(None, max_length=40, description="Phone number")
-    address: str | None = Field(None, max_length=255, description="Address")
     age: int | None = Field(None, ge=0, description="Age")
 
 

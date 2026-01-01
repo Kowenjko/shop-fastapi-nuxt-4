@@ -14,6 +14,7 @@ class ApiPrefix(BaseModel):
     categories: str = "/categories"
     users: str = "/users"
     posts: str = "/posts"
+    cities: str = "/cities"
     orders: str = "/orders"
     profile: str = "/profile"
     products: str = "/products"
