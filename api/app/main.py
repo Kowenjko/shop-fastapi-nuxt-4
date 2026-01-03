@@ -12,6 +12,7 @@ from contextlib import asynccontextmanager
 
 from fastapi.responses import ORJSONResponse
 from app.routes import router as api_router
+from app.routes import ws_router
 
 from redis.asyncio import Redis
 
@@ -56,6 +57,7 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory=settings.static_dir), name="static")
 
 app.include_router(api_router)
+app.include_router(ws_router)
 
 
 @app.get("/")

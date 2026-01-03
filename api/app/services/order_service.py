@@ -17,6 +17,8 @@ from app.schemas.order import (
     OrderProductsReplace,
 )
 
+from app.core.ws_manager import ws_manager
+
 
 class OrderService:
     def __init__(self, session: AsyncSession):
@@ -259,10 +261,19 @@ class OrderService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Only draft orders can be canceled",
             )
-
+        old_status = order.status
         order.status = OrderStatus.CANCELED
 
         await self.session.commit()
+        await ws_manager.send_to_user(
+            order.user_id,
+            {
+                "event": "order.status_changed",
+                "order_id": order.id,
+                "old_status": old_status,
+                "new_status": order.status,
+            },
+        )
         return self._to_order_response(order)
 
     """Оплатить (оформить) заказ."""
@@ -283,10 +294,22 @@ class OrderService:
                 detail="Cannot checkout an empty order",
             )
 
+        old_status = order.status
+
         # Меняем статус на PAID
         order.status = OrderStatus.PAID
 
         await self.session.commit()
+
+        await ws_manager.send_to_user(
+            order.user_id,
+            {
+                "event": "order.status_changed",
+                "order_id": order.id,
+                "old_status": old_status,
+                "new_status": order.status,
+            },
+        )
         return self._to_order_response(order)
 
     """Проверка, что заказ существует."""

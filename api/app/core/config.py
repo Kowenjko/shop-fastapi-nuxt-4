@@ -22,6 +22,11 @@ class ApiPrefix(BaseModel):
     redoc: str = "/api/redoc"
 
 
+class WsPrefix(BaseModel):
+    prefix: str = "/ws"
+    orders: str = "/orders"
+
+
 class DatabaseConfig(BaseSettings):
     url: PostgresDsn
     echo: bool = False
@@ -85,6 +90,7 @@ class Settings(BaseSettings):
     images_dir: str = "static/images"
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
+    ws: WsPrefix = WsPrefix()
     db: DatabaseConfig
     redis: RedisConfig = RedisConfig()
     cache: CacheConfig = CacheConfig()

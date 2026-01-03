@@ -9,7 +9,6 @@ from .base import Base
 from .mixins import UserRelationMixin
 
 if TYPE_CHECKING:
-    from .product import Product
     from .order_product_association import OrderProductAssociation
 
 

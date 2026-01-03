@@ -26,7 +26,7 @@ class City(Base):
 
     @property
     def full_name(self) -> int:
-        return f"{self.region}, {self.district} р-н, {self.community} громада, {self.city_type} {self.name}"
+        return f"{self.region}, {self.district} р-н, {self.community} громада, {self.city_type.lower()} {self.name}"
 
     def __str__(self):
         return f"{self.__class__.__name__}(id={self.id}, name={self.name!r})"

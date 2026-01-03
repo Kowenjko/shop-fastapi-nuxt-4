@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 const productsStore = useProductsStore()
 
+const test = useOrdersSocket('test')
+
 const {
   categories,
   productsCount,
