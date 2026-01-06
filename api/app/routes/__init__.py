@@ -10,10 +10,12 @@ from .profile import router as profile_router
 from .orders import router as orders_router
 from .post import router as posts_router
 from .city import router as cities_router
+from .auth import router as auth_router
 from .ws_orders import router as ws_orders_router
 
 router = APIRouter(prefix=settings.api.prefix)
 
+router.include_router(auth_router, prefix=settings.api.auth)
 router.include_router(users_router, prefix=settings.api.users)
 router.include_router(profile_router, prefix=settings.api.profile)
 router.include_router(posts_router, prefix=settings.api.posts)

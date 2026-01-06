@@ -3,6 +3,7 @@ from app.repositories.user_repository import UserRepository
 from app.schemas.user import CreateUser, UserResponse
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.auth_security import hash_password
 
 
 class UserService:
@@ -37,8 +38,23 @@ class UserService:
                 status_code=status.HTTP_409_CONFLICT,
                 detail=f"User with email {user_data.email} already exists",
             )
+        if len(user_data.password.encode("utf-8")) > 72:
+            raise HTTPException(
+                400,
+                "Password is too long",
+            )
+        hashed_password = hash_password(user_data.password)
 
-        user = await self.repository.create(user_data)
+        user = await self.repository.create(
+            {
+                "username": user_data.username,
+                "password": hashed_password,
+                "email": user_data.email,
+                "role": "user",
+            }
+        )
+        if not user:
+            return None
         return UserResponse.model_validate(user)
 
     def _not_user(self, user, text: str):

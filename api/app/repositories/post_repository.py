@@ -2,7 +2,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
-from app.models import Post, User
+from app.models import Post, User, Profile
 from app.schemas.post import PostCreate, PostUpdate
 
 
@@ -18,7 +18,11 @@ class PostRepository:
         stmt = (
             select(Post)
             .where(Post.id == post.id)
-            .options(selectinload(Post.user).selectinload(User.profile))
+            .options(
+                selectinload(Post.user)
+                .selectinload(User.profile)
+                .selectinload(Profile.city)
+            )
         )
         result = await self.session.execute(stmt)
         return result.scalar_one()
@@ -26,7 +30,11 @@ class PostRepository:
     async def get_all(self, limit: int = 50, offset: int = 0) -> List[Post]:
         stmt = (
             select(Post)
-            .options(selectinload(Post.user).selectinload(User.profile))
+            .options(
+                selectinload(Post.user)
+                .selectinload(User.profile)
+                .selectinload(Profile.city)
+            )
             .order_by(Post.id)
             .limit(limit)
             .offset(offset)
@@ -40,7 +48,11 @@ class PostRepository:
         stmt = (
             select(Post)
             .where(Post.user_id.in_(user_ids))
-            .options(selectinload(Post.user).selectinload(User.profile))
+            .options(
+                selectinload(Post.user)
+                .selectinload(User.profile)
+                .selectinload(Profile.city)
+            )
             .order_by(Post.id)
             .limit(limit)
             .offset(offset)
@@ -58,7 +70,11 @@ class PostRepository:
 
         stmt = (
             select(Post)
-            .options(selectinload(Post.user).selectinload(User.profile))
+            .options(
+                selectinload(Post.user)
+                .selectinload(User.profile)
+                .selectinload(Profile.city)
+            )
             .order_by(Post.id)
             .limit(per_page + 1)  # +1 для проверки next
             .offset(offset)
@@ -81,7 +97,11 @@ class PostRepository:
         stmt = (
             select(Post)
             .where(Post.id == post_id)
-            .options(selectinload(Post.user).selectinload(User.profile))
+            .options(
+                selectinload(Post.user)
+                .selectinload(User.profile)
+                .selectinload(Profile.city)
+            )
         )
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
@@ -90,7 +110,11 @@ class PostRepository:
         stmt = (
             select(Post)
             .where(Post.user_id == user_id)
-            .options(selectinload(Post.user).selectinload(User.profile))
+            .options(
+                selectinload(Post.user)
+                .selectinload(User.profile)
+                .selectinload(Profile.city)
+            )
             .order_by(Post.id)
         )
 
@@ -106,7 +130,11 @@ class PostRepository:
         stmt = (
             select(Post)
             .where(Post.id == post.id)
-            .options(selectinload(Post.user).selectinload(User.profile))
+            .options(
+                selectinload(Post.user)
+                .selectinload(User.profile)
+                .selectinload(Profile.city)
+            )
         )
         result = await self.session.execute(stmt)
         return result.scalar_one()

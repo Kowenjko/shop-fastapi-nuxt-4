@@ -1,6 +1,9 @@
+from pathlib import Path
 from pydantic import PostgresDsn, BaseModel
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List, Union
+
+BASE_DIR = Path(__file__).parent.parent
 
 
 class RunConfig(BaseModel):
@@ -8,9 +11,18 @@ class RunConfig(BaseModel):
     port: int = 8000
 
 
+class AuthJWT(BaseModel):
+    private_jwt_key: Path = BASE_DIR / "certs" / "jwt-private.pem"
+    public_jwt_key: Path = BASE_DIR / "certs" / "jwt-public.pem"
+    algorithm: str = "RS256"
+    access_token_expire_minutes: int
+    refresh_token_expire_days: int
+
+
 class ApiPrefix(BaseModel):
     prefix: str = "/api"
     cart: str = "/cart"
+    auth: str = "/auth"
     categories: str = "/categories"
     users: str = "/users"
     posts: str = "/posts"
@@ -89,6 +101,7 @@ class Settings(BaseSettings):
     static_dir: str = "static"
     images_dir: str = "static/images"
     run: RunConfig = RunConfig()
+    auth_jwt: AuthJWT
     api: ApiPrefix = ApiPrefix()
     ws: WsPrefix = WsPrefix()
     db: DatabaseConfig

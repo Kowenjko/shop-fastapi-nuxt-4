@@ -6,7 +6,8 @@ from pydantic import BaseModel, EmailStr, ConfigDict, Field
 class CreateUser(BaseModel):
     username: Annotated[str, MinLen(3), MaxLen(20)]
     email: EmailStr
-    password: str
+    password: Annotated[str, MinLen(8), MaxLen(64)]
+    role: str = "user"
 
 
 class UserResponse(BaseModel):
@@ -16,3 +17,4 @@ class UserResponse(BaseModel):
     username: str
     email: EmailStr
     active: bool
+    role: str

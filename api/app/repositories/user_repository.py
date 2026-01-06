@@ -4,6 +4,8 @@ from typing import List, Optional
 from app.models import User
 from app.schemas.user import CreateUser
 
+from sqlalchemy.exc import IntegrityError
+
 
 class UserRepository:
     def __init__(self, session: AsyncSession):
@@ -30,8 +32,12 @@ class UserRepository:
         return user
 
     async def create(self, user_data: CreateUser) -> User:
-        db_user = User(**user_data.model_dump())
-        self.session.add(db_user)
-        await self.session.commit()
-        await self.session.refresh(db_user)
-        return db_user
+        user = User(**user_data)
+        self.session.add(user)
+        try:
+            await self.session.commit()
+        except IntegrityError:
+            await self.session.rollback()
+            return None
+        await self.session.refresh(user)
+        return user
