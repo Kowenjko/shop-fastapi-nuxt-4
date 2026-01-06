@@ -14,7 +14,7 @@ from app.repositories.profile_repository import ProfileRepository
 from app.models import Profile
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
 async def get_payload(
@@ -35,6 +35,7 @@ async def get_payload(
 async def get_current_user_id(
     payload: dict = Depends(get_payload),
 ) -> int:
+    print("***" * 10)
     return int(payload["sub"])
 
 

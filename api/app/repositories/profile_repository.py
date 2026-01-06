@@ -1,5 +1,5 @@
 from sqlalchemy import select
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional
 from app.models import Profile
@@ -11,11 +11,19 @@ class ProfileRepository:
         self.session = session
 
     async def create(self, profile_data: ProfileCreate) -> Profile:
-        db_profile = Profile(**profile_data.model_dump())
-        self.session.add(db_profile)
+        profile = Profile(**profile_data.model_dump())
+        self.session.add(profile)
         await self.session.commit()
-        await self.session.refresh(db_profile)
-        return db_profile
+        stmt = (
+            select(Profile)
+            .where(Profile.id == profile.id)
+            .options(
+                selectinload(Profile.user),
+                selectinload(Profile.city),
+            )
+        )
+        result = await self.session.execute(stmt)
+        return result.scalar_one()
 
     async def get_by_user_id(self, user_id: int) -> Optional[Profile]:
         stmt = (

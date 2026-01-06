@@ -1,7 +1,9 @@
 from typing import Annotated, List, Optional
 from fastapi import APIRouter, Depends, Query, Request, status
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.services.dependencies import get_current_user_id
 from app.core.db_helper import db_helper
 from app.services.post_service import PostService
 from app.schemas.post import PostCreate, PostUpdate, PostResponse, PostMetaResponse
@@ -43,6 +45,19 @@ async def get_posts_paginated(
     )
 
 
+@router.get(
+    "/user/",
+    response_model=List[PostResponse],
+    status_code=status.HTTP_200_OK,
+)
+async def get_posts_by_user(
+    session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
+    user_id: int = Depends(get_current_user_id),
+):
+    service = PostService(session)
+    return await service.get_post_by_user_id(user_id)
+
+
 @router.get("/{post_id}/", response_model=PostResponse, status_code=status.HTTP_200_OK)
 async def get_post(
     post_id: int,
@@ -50,19 +65,6 @@ async def get_post(
 ):
     service = PostService(session)
     return await service.get_post(post_id)
-
-
-@router.get(
-    "/user/{user_id}/",
-    response_model=List[PostResponse],
-    status_code=status.HTTP_200_OK,
-)
-async def get_posts_by_user(
-    user_id: int,
-    session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
-):
-    service = PostService(session)
-    return await service.get_post_by_user_id(user_id)
 
 
 # --- POST ---

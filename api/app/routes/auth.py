@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, Response, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -11,6 +12,12 @@ from app.services.dependencies import get_current_user_id
 from app.services.auth_service import AuthService
 
 router = APIRouter(tags=["Auth"])
+
+#    "username": "string7",
+#    "email": "user7@example.com",
+#    "password": "stringst7",
+
+#
 
 
 @router.post("/login")
@@ -46,13 +53,13 @@ async def register(
     return await service.create_user(user_data)
 
 
-@router.post("/logout", status_code=204)
+@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
 async def logout(
     response: Response,
     user_id: int = Depends(get_current_user_id),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    service = UserService(session)
-    await service(user_id)
+    service = AuthService(session)
+    await service.logout(user_id)
 
     response.delete_cookie("refresh_token")

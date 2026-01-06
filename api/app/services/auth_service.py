@@ -21,6 +21,7 @@ class AuthService:
         self,
         session: AsyncSession,
     ):
+        self.session = session
         self.user_repository = UserRepository(session)
 
     async def login(
