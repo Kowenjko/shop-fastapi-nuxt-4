@@ -50,8 +50,11 @@ def get_current_user_id(
     return int(payload["sub"])
 
 
-async def get_current_user(user_id: int = Depends(get_current_user_id)) -> UserResponse:
-    response = UserRepository(db_helper.get_scoped_session)
+async def get_current_user(
+    user_id: int = Depends(get_current_user_id),
+    session: AsyncSession = Depends(db_helper.session_getter),
+) -> UserResponse:
+    response = UserRepository(session)
     user = await response.get_by_id(user_id)
     if user:
         return user
@@ -62,13 +65,22 @@ async def get_current_user(user_id: int = Depends(get_current_user_id)) -> UserR
 
 
 def get_auth_user_from_token_of_type(token_type: str):
-    def get_auth_user_from_token(
+    async def dependency(
         payload: dict = Depends(get_current_token_payload),
-    ) -> UserAuth:
+        session: AsyncSession = Depends(db_helper.session_getter),
+    ) -> User:
         validate_token_type(payload, token_type)
-        return get_current_user()
+        user_id = int(payload["sub"])
+        response = UserRepository(session)
+        user = await response.get_by_id(user_id)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="token invalid (user not found)",
+            )
+        return user
 
-    return get_auth_user_from_token
+    return dependency
 
 
 get_current_auth_user = get_auth_user_from_token_of_type(ACCESS_TOKEN_TYPE)
@@ -141,6 +153,12 @@ async def get_refresh_user(session: AsyncSession, refresh: str) -> User:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="token invalid (user not found)",
+        )
+
+    if not user.active:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="user inactive",
         )
 
     return user
