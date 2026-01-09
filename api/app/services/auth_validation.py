@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jwt import InvalidTokenError
+from jwt import ExpiredSignatureError, InvalidTokenError
 
 
 from app.models.user import User
@@ -87,7 +87,7 @@ def validate_auth_user(
 
     if not validate_password(
         password=user_data.password,
-        hashed_password=user.password,
+        hashed_password=user.password_hash,
     ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -109,10 +109,15 @@ async def get_refresh_user(session: AsyncSession, refresh: str) -> User:
     if not refresh:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="token invalid",
+            detail="refresh token missing",
         )
 
-    payload = decode_jwt(token=refresh)
+    try:
+        payload = decode_jwt(token=refresh)
+    except ExpiredSignatureError:
+        raise HTTPException(401, "refresh token expired")
+    except InvalidTokenError:
+        raise HTTPException(401, "invalid refresh token")
 
     if payload.get("type") != REFRESH_TOKEN_TYPE:
         raise HTTPException(
@@ -127,12 +132,15 @@ async def get_refresh_user(session: AsyncSession, refresh: str) -> User:
             detail="token invalid",
         )
 
+    await auth_repository.delete(refresh)
+
     user = await session.get(User, int(payload["sub"]))
 
-    if user:
-        return user
+    if not user:
 
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="token invalid (user not found)",
-    )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="token invalid (user not found)",
+        )
+
+    return user

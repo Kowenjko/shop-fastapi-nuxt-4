@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 class User(CreatedAtMixin, Base):
     username: Mapped[str] = mapped_column(String(32), unique=True)
-    password: Mapped[bytes] = mapped_column(nullable=False)
+    password_hash: Mapped[bytes] = mapped_column(nullable=False)
     email: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True)
     role: Mapped[str] = mapped_column(default="user", server_default="user")
     active: Mapped[bool] = mapped_column(Boolean, default=True)

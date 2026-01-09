@@ -34,12 +34,27 @@ async def login(
 
 @router.post("/refresh/")
 async def refresh(
-    request: Request, session: AsyncSession = Depends(db_helper.session_getter)
+    response: Response,
+    request: Request,
+    session: AsyncSession = Depends(db_helper.session_getter),
 ):
     service = AuthService(session)
-    access = await service.refresh(request)
 
-    return {"access_token": access, "token_type": "bearer"}
+    access, new_refresh = await service.refresh(request)
+
+    response.set_cookie(
+        "refresh_token",
+        new_refresh,
+        httponly=True,
+        secure=True,
+        samesite="strict",
+    )
+
+    return {
+        "access_token": access,
+        "refresh_token": new_refresh,
+        "token_type": "bearer",
+    }
 
 
 @router.post(

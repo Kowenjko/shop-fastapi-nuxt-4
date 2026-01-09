@@ -48,7 +48,7 @@ class UserService:
         user = await self.repository.create(
             {
                 "username": user_data.username,
-                "password": hashed_password,
+                "password_hash": hashed_password,
                 "email": user_data.email,
                 "role": "user",
             }

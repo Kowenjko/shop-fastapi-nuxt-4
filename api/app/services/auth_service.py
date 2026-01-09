@@ -1,4 +1,3 @@
-from app.models import RefreshToken
 from app.repositories.user_repository import UserRepository
 from app.repositories.auth_repository import AuthRepository
 
@@ -52,9 +51,15 @@ class AuthService:
         refresh = request.cookies.get("refresh_token")
 
         user = await get_refresh_user(self.session, refresh)
+
+        new_refresh = create_refresh_token(user)
+        token_data = CreateRefreshToken(token=new_refresh, user_id=user.id)
+
+        await self.auth_repository.create(token_data)
+
         access = create_access_token(user)
 
-        return access
+        return access, new_refresh
 
     async def logout(self, user_id: int):
-        await self.auth_repository.delete(user_id)
+        await self.auth_repository.delete_all_for_user(user_id)
