@@ -6,7 +6,7 @@ from .mixins.created_at import CreatedAtMixin, utcnow
 from sqlalchemy import Boolean, DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from datetime import datetime, timezone
+from datetime import datetime
 
 if TYPE_CHECKING:
     from app.models import Profile, Order, Post
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
 class User(CreatedAtMixin, Base):
     username: Mapped[str] = mapped_column(String(32), unique=True)
-    password: Mapped[str] = mapped_column(String(128), nullable=False)
+    password: Mapped[bytes] = mapped_column(nullable=False)
     email: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True)
     role: Mapped[str] = mapped_column(default="user", server_default="user")
     active: Mapped[bool] = mapped_column(Boolean, default=True)

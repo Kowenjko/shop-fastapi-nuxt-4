@@ -2,6 +2,8 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.services.auth_validation import get_current_user_id
+
 from app.core.db_helper import db_helper
 from app.services.order_service import OrderService
 from app.schemas.order import (
@@ -24,11 +26,24 @@ router = APIRouter(tags=["Orders"])
 @router.post("/", response_model=OrderResponse, status_code=status.HTTP_201_CREATED)
 async def create_order(
     data: OrderCreate,
-    user_id: int,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    user_id: int = Depends(get_current_user_id),
 ):
     service = OrderService(session)
     return await service.create_order(user_id, data)
+
+
+@router.get(
+    "/user/",
+    response_model=list[OrderUserResponse],
+    status_code=status.HTTP_200_OK,
+)
+async def get_user_orders(
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    user_id: int = Depends(get_current_user_id),
+):
+    service = OrderService(session)
+    return await service.get_user_orders(user_id)
 
 
 @router.get(
@@ -42,19 +57,6 @@ async def get_order(
 ):
     service = OrderService(session)
     return await service.get_order_by_id(order_id)
-
-
-@router.get(
-    "/user/{user_id}/",
-    response_model=list[OrderUserResponse],
-    status_code=status.HTTP_200_OK,
-)
-async def get_user_orders(
-    user_id: int,
-    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
-):
-    service = OrderService(session)
-    return await service.get_user_orders(user_id)
 
 
 @router.post(
@@ -75,7 +77,7 @@ async def add_product_to_order(
 
 
 @router.post(
-    "/products",
+    "/products/",
     response_model=OrderResponse,
     status_code=status.HTTP_200_OK,
 )
@@ -88,7 +90,7 @@ async def add_products_to_order(
 
 
 @router.put(
-    "/products",
+    "/products/",
     response_model=OrderResponse,
     status_code=status.HTTP_200_OK,
 )

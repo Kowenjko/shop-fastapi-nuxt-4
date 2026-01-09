@@ -46,7 +46,7 @@ async def get_city(
     return await service.get_city_by_id(city_id)
 
 
-@router.get("/regions", response_model=list[str])
+@router.get("/regions/", response_model=list[str])
 @cache(expire=3600, namespace=settings.cache.namespace.cities_regions)  # 1 час
 async def get_regions(
     v: int = 1,  # 👈 фиктивный параметр для того чтобы сработал redis
@@ -56,7 +56,7 @@ async def get_regions(
     return await service.get_city_regions()
 
 
-@router.get("/districts", response_model=list[str])
+@router.get("/districts/", response_model=list[str])
 @cache(expire=3600, namespace=settings.cache.namespace.cities_districts)  # 1 час
 async def get_districts(
     region: str | None = None,
@@ -66,7 +66,7 @@ async def get_districts(
     return await service.get_city_districts(region)
 
 
-@router.get("/communities", response_model=list[str])
+@router.get("/communities/", response_model=list[str])
 @cache(expire=3600, namespace=settings.cache.namespace.cities_communities)  # 1 час
 async def get_communities(
     region: str | None = None,

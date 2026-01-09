@@ -3,7 +3,7 @@ from app.repositories.user_repository import UserRepository
 from app.schemas.user import CreateUser, UserResponse
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.auth_security import hash_password
+from app.utils import hash_password
 
 
 class UserService:

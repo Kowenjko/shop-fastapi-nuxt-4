@@ -20,19 +20,19 @@ router = APIRouter(tags=["Auth"])
 #
 
 
-@router.post("/login")
+@router.post("/login/")
 async def login(
     response: Response,
     user_data: OAuth2PasswordRequestForm = Depends(),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     service = AuthService(session)
-    access = await service.login(response, user_data)
+    access, refresh = await service.login(response, user_data)
 
-    return {"access_token": access, "token_type": "bearer"}
+    return {"access_token": access, "refresh_token": refresh, "token_type": "bearer"}
 
 
-@router.post("/refresh")
+@router.post("/refresh/")
 async def refresh(
     request: Request, session: AsyncSession = Depends(db_helper.session_getter)
 ):
@@ -43,7 +43,7 @@ async def refresh(
 
 
 @router.post(
-    "/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED
+    "/register/", response_model=UserResponse, status_code=status.HTTP_201_CREATED
 )
 async def register(
     user_data: CreateUser,
@@ -53,7 +53,7 @@ async def register(
     return await service.create_user(user_data)
 
 
-@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
+@router.post("/logout/", status_code=status.HTTP_204_NO_CONTENT)
 async def logout(
     response: Response,
     user_id: int = Depends(get_current_user_id),

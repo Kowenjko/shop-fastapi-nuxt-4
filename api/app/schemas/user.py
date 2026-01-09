@@ -18,3 +18,7 @@ class UserResponse(BaseModel):
     email: EmailStr
     active: bool
     role: str
+
+
+class UserAuth(UserResponse):
+    pass

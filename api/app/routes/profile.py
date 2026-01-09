@@ -1,4 +1,3 @@
-from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -12,9 +11,7 @@ from app.services.dependencies import profile_by_user_id
 router = APIRouter(tags=["Profile"])
 
 
-@router.get(
-    "/{user_id}/", response_model=ProfileResponse, status_code=status.HTTP_200_OK
-)
+@router.get("/", response_model=ProfileResponse, status_code=status.HTTP_200_OK)
 async def get_profile(
     profile: Profile = Depends(profile_by_user_id),
 ):
@@ -30,9 +27,7 @@ async def create_profile(
     return await service.create_profile(profile_data)
 
 
-@router.put(
-    "/{user_id}/", response_model=ProfileResponse, status_code=status.HTTP_200_OK
-)
+@router.put("/", response_model=ProfileResponse, status_code=status.HTTP_200_OK)
 async def update_profile(
     profile_data: ProfileUpdate,
     profile: Profile = Depends(profile_by_user_id),

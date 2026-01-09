@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, Query, Request, status
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.services.dependencies import get_current_user_id
+from app.services.auth_validation import get_current_user_id
 from app.core.db_helper import db_helper
 from app.services.post_service import PostService
 from app.schemas.post import PostCreate, PostUpdate, PostResponse, PostMetaResponse
