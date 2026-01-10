@@ -4,19 +4,19 @@ from app.core.config import settings
 oauth = OAuth()
 
 oauth.register(
-    name="github",
-    client_id=settings.oauth.github_client_id,
-    client_secret=settings.oauth.github_client_secret,
-    access_token_url="https://github.com/login/oauth/access_token",
-    authorize_url="https://github.com/login/oauth/authorize",
-    api_base_url="https://api.github.com/",
-    client_kwargs={"scope": "user:email"},
+    name=settings.oauth.github.name,
+    client_id=settings.oauth.github.client_id,
+    client_secret=settings.oauth.github.client_secret,
+    access_token_url=settings.oauth.github.access_token_url,
+    authorize_url=settings.oauth.github.authorize_url,
+    api_base_url=settings.oauth.github.api_base_url,
+    client_kwargs=settings.oauth.github.client_kwargs,
 )
 
 oauth.register(
-    name="google",
-    client_id=settings.oauth.google_client_id,
-    client_secret=settings.oauth.google_client_secret,
-    server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
-    client_kwargs={"scope": "openid email profile"},
+    name=settings.oauth.google.name,
+    client_id=settings.oauth.google.client_id,
+    client_secret=settings.oauth.google.client_secret,
+    server_metadata_url=settings.oauth.google.server_metadata_url,
+    client_kwargs=settings.oauth.google.client_kwargs,
 )

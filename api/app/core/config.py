@@ -19,12 +19,31 @@ class AuthJWT(BaseModel):
     refresh_token_expire_days: int
 
 
+class GithubConfig(BaseModel):
+    name: str = "github"
+    client_id: str
+    client_secret: str
+    access_token_url: str = "https://github.com/login/oauth/access_token"
+    authorize_url: str = "https://github.com/login/oauth/authorize"
+    api_base_url: str = "https://api.github.com/"
+    client_kwargs: dict = {"scope": "user:email"}
+
+
+class GoogleConfig(BaseModel):
+    name: str = "google"
+    client_id: str
+    client_secret: str
+    server_metadata_url: str = (
+        "https://accounts.google.com/.well-known/openid-configuration"
+    )
+
+    client_kwargs: dict = {"scope": "openid email profile"}
+
+
 class OAuthConfig(BaseModel):
     session_secret_key: str
-    github_client_id: str
-    github_client_secret: str
-    google_client_id: str
-    google_client_secret: str
+    github: GithubConfig
+    google: GoogleConfig
 
 
 class ApiPrefix(BaseModel):
