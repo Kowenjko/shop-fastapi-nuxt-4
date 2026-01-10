@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, Response, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
-from pydantic import BaseModel
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
 from app.core.db_helper import db_helper
+from app.core.oauth import oauth
 
 from app.schemas.user import CreateUser, UserResponse
 from app.services.user_service import UserService
@@ -18,6 +19,31 @@ router = APIRouter(tags=["Auth"])
 #    "password": "stringst7",
 
 #
+
+
+@router.get("/github/login/")
+async def github_login(request: Request):
+    return await oauth.github.authorize_redirect(
+        request,
+        redirect_uri="https://api.shop.local/auth/github/callback",
+    )
+
+
+@router.get("/github/callback")
+async def github_callback(request: Request):
+    print("Session data:", request.session)
+    print("GET state:", request.query_params.get("state"))
+    token = await oauth.github.authorize_access_token(request)
+    user_data = await oauth.github.get("user", token=token)
+    user_data = user_data.json()
+
+    email_data = await oauth.github.get("user/emails", token=token)
+    email = next(
+        (e["email"] for e in email_data.json() if e["primary"]),
+        None,
+    )
+
+    return email
 
 
 @router.post("/login/")

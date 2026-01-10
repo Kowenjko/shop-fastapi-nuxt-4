@@ -11,11 +11,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.db_helper import db_helper
 
 from app.utils import decode_jwt, validate_password
-from app.schemas.user import UserAuth, UserResponse
+from app.schemas.user import UserResponse
 from app.enums import TOKEN_TYPE_FIELD, ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login/")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login/")
 
 
 def get_current_token_payload(

@@ -19,6 +19,14 @@ class AuthJWT(BaseModel):
     refresh_token_expire_days: int
 
 
+class OAuthConfig(BaseModel):
+    session_secret_key: str
+    github_client_id: str
+    github_client_secret: str
+    google_client_id: str
+    google_client_secret: str
+
+
 class ApiPrefix(BaseModel):
     prefix: str = "/api"
     cart: str = "/cart"
@@ -97,14 +105,16 @@ class Settings(BaseSettings):
         "http://0.0.0.0:5173",
         "http://0.0.0.0:3000",
         "https://shop.local",
+        "https://api.shop.local",
     ]
     static_dir: str = "static"
     images_dir: str = "static/images"
     run: RunConfig = RunConfig()
     auth_jwt: AuthJWT
+    oauth: OAuthConfig
+    db: DatabaseConfig
     api: ApiPrefix = ApiPrefix()
     ws: WsPrefix = WsPrefix()
-    db: DatabaseConfig
     redis: RedisConfig = RedisConfig()
     cache: CacheConfig = CacheConfig()
 

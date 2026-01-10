@@ -9,4 +9,6 @@ if __name__ == "__main__":
         port=settings.run.port,
         reload=settings.debug,
         log_level="info",
+        proxy_headers=True,
+        forwarded_allow_ips="*",
     )
