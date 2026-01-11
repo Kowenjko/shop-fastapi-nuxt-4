@@ -17,7 +17,7 @@ const {
 await fetchCategories()
 await fetchProducts()
 
-const goToRedirect = () => (window.location.href = 'https://api.shop.local/auth/github/login')
+const goToRedirect = () => navigateTo('https://api.shop.local/auth/github/login', { external: true })
 </script>
 
 <template>

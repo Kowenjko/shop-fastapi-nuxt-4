@@ -44,6 +44,7 @@ class GoogleConfig(BaseModel):
 
 class OAuthConfig(BaseModel):
     session_secret_key: str
+    frontend_redirect: str = "https://shop.local/about"
     github: GithubConfig
     google: GoogleConfig
 

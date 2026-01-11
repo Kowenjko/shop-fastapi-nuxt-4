@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, Response, Request
 
+from fastapi.responses import RedirectResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db_helper import db_helper
+from app.core.config import settings
 from app.enums import Providers
 
 from app.services.oauth_service import OAuthService, get_client_config
@@ -56,7 +58,27 @@ async def oauth_callback(
         response=response,
     )
 
-    return {"access_token": access, "refresh_token": refresh, "token_type": "bearer"}
+    redirect = RedirectResponse(
+        url=settings.oauth.frontend_redirect,
+        status_code=302,
+    )
+
+    redirect.set_cookie(
+        "access_token",
+        access,
+        httponly=True,
+        secure=True,
+        samesite="none",
+    )
+    redirect.set_cookie(
+        "refresh_token",
+        refresh,
+        httponly=True,
+        secure=True,
+        samesite="none",
+    )
+
+    return redirect
 
 
 @router.post("/{provider}/link", status_code=201)
