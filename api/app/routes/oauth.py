@@ -81,11 +81,11 @@ async def oauth_callback(
     return redirect
 
 
-@router.post("/{provider}/link", status_code=201)
+@router.get("/{provider}/link", status_code=201)
 async def link_oauth_account(
     provider: Providers,
     provider_id: str,  # обычно приходит из OAuth callbacks
-    user_id: int = Depends(get_current_user_id),
+    user_id: int,
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     service = OAuthService(session)
@@ -95,12 +95,12 @@ async def link_oauth_account(
     return {"detail": f"{provider} account linked successfully"}
 
 
-@router.delete("/{provider}/unlink", status_code=204)
+@router.get("/{provider}/unlink", status_code=201)
 async def unlink_oauth_account(
     provider: Providers,
-    user_id: int = Depends(get_current_user_id),
+    user_id: int,
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     service = OAuthService(session)
     await service.unlink_account(user_id=user_id, provider=provider)
-    return Response(status_code=204)
+    return {"details": "account deleted"}
