@@ -87,11 +87,9 @@ get_current_auth_user = get_auth_user_from_token_of_type(ACCESS_TOKEN_TYPE)
 get_current_auth_user_for_refresh = get_auth_user_from_token_of_type(REFRESH_TOKEN_TYPE)
 
 
-def validate_auth_user(
-    user_data: OAuth2PasswordRequestForm, user: UserResponse
-) -> bool:
+def validate_auth_user(user_data: OAuth2PasswordRequestForm, user: User | None) -> None:
 
-    if not user_data:
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="invalid username",
@@ -111,8 +109,6 @@ def validate_auth_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="user inactive",
         )
-
-    return True
 
 
 async def get_refresh_user(session: AsyncSession, refresh: str) -> User:

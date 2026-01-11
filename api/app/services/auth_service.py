@@ -1,3 +1,4 @@
+from app.models.user import User
 from app.repositories.user_repository import UserRepository
 from app.repositories.auth_repository import AuthRepository
 
@@ -9,7 +10,7 @@ from app.schemas.auth import CreateRefreshToken
 
 from app.helpers.auth import create_access_token, create_refresh_token
 
-from app.services.auth_validation import validate_auth_user, get_refresh_user
+from app.services.auth_validation import get_refresh_user
 from fastapi.security import OAuth2PasswordRequestForm
 
 
@@ -28,15 +29,28 @@ class AuthService:
     ) -> str:
 
         user = await self.user_repository.get_by_username(user_data.username)
+        return await self.issue_tokens(user, response)
 
-        validate_auth_user(user_data=user_data, user=user)
+    async def refresh(
+        self,
+        request: Request,
+        response: Response,
+    ) -> str:
+        refresh = request.cookies.get("refresh_token")
 
+        user = await get_refresh_user(self.session, refresh)
+        return await self.issue_tokens(user, response)
+
+    async def logout(self, user_id: int):
+        await self.auth_repository.delete_all_for_user(user_id)
+
+    async def issue_tokens(self, user: User, response: Response):
         access = create_access_token(user)
         refresh = create_refresh_token(user)
 
-        token_data = CreateRefreshToken(token=refresh, user_id=user.id)
-
-        await self.auth_repository.create(token_data)
+        await self.auth_repository.create(
+            CreateRefreshToken(token=refresh, user_id=user.id)
+        )
 
         response.set_cookie(
             "refresh_token",
@@ -46,20 +60,3 @@ class AuthService:
         )
 
         return access, refresh
-
-    async def refresh(self, request: Request) -> str:
-        refresh = request.cookies.get("refresh_token")
-
-        user = await get_refresh_user(self.session, refresh)
-
-        new_refresh = create_refresh_token(user)
-        token_data = CreateRefreshToken(token=new_refresh, user_id=user.id)
-
-        await self.auth_repository.create(token_data)
-
-        access = create_access_token(user)
-
-        return access, new_refresh
-
-    async def logout(self, user_id: int):
-        await self.auth_repository.delete_all_for_user(user_id)

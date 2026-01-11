@@ -8,6 +8,7 @@ __all__ = (
     "Post",
     "City",
     "RefreshToken",
+    "OAuthAccount",
     "OrderProductAssociation",
 )
 
@@ -20,4 +21,5 @@ from .order import Order
 from .post import Post
 from .city import City
 from .refresh_token import RefreshToken
+from .oauth_account import OAuthAccount
 from .order_product_association import OrderProductAssociation

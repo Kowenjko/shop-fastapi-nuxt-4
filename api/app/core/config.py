@@ -27,6 +27,7 @@ class GithubConfig(BaseModel):
     authorize_url: str = "https://github.com/login/oauth/authorize"
     api_base_url: str = "https://api.github.com/"
     client_kwargs: dict = {"scope": "user:email"}
+    redirect_uri: str = "https://api.shop.local/auth/github/callback"
 
 
 class GoogleConfig(BaseModel):
@@ -38,6 +39,7 @@ class GoogleConfig(BaseModel):
     )
 
     client_kwargs: dict = {"scope": "openid email profile"}
+    redirect_uri: str = "https://api.shop.local/auth/google/callback"
 
 
 class OAuthConfig(BaseModel):
@@ -115,6 +117,7 @@ class Settings(BaseSettings):
 
     app_name: str = "FastAPI Shop"
     debug: bool = True
+    base_url: str
 
     cors_origins: Union[List[str], str] = [
         "http://localhost:5173",

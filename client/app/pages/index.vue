@@ -16,12 +16,16 @@ const {
 
 await fetchCategories()
 await fetchProducts()
+
+const goToRedirect = () => (window.location.href = 'https://api.shop.local/auth/github/login')
 </script>
 
 <template>
   <div class="min-h-screen bg-white">
     <div class="mx-auto max-w-7xl px-4 py-8">
       <TitlePage title="Product Catalog" description="Discover our amazing products" />
+
+      <button @click="goToRedirect">Redirect</button>
 
       <div class="flex gap-8">
         <aside class="w-64 shrink-0">
