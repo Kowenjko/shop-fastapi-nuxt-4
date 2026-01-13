@@ -28,6 +28,17 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  shadcn: {
+    prefix: '',
+    componentDir: './app/components/ui',
+  },
 
-  modules: ['@vueuse/nuxt', '@pinia/nuxt', 'nuxt-typed-router', '@nuxt/image', 'pinia-plugin-persistedstate/nuxt'],
+  modules: [
+    '@vueuse/nuxt',
+    '@pinia/nuxt',
+    'nuxt-typed-router',
+    '@nuxt/image',
+    'pinia-plugin-persistedstate/nuxt',
+    'shadcn-nuxt',
+  ],
 })

@@ -60,13 +60,10 @@ const handleAddToCart = async () => {
       <!-- Цена -->
       <p class="mb-4 text-2xl font-bold text-black">${{ product.price.toFixed(2) }}</p>
 
-      <Button
-        @on-click="handleAddToCart"
-        :disabled="adding"
-        :text="adding ? 'Adding...' : 'Add to Cart'"
-        :is-show-transition="showNotification"
-        text-notification="✓ Added to cart!"
-      />
+      <Button @click="handleAddToCart" size="lg" class="w-full">{{ adding ? 'Adding...' : 'Add to Cart' }}</Button>
+      <transition name="fade">
+        <div v-if="showNotification" class="mt-2 text-center text-sm font-medium text-green-600">✓ Added to cart!</div>
+      </transition>
     </div>
   </div>
 </template>

@@ -12,7 +12,8 @@ const hideModal = () => (modalStore.modalProceedCart.show = false)
       </button>
       <div class="py-4 text-center text-2xl font-bold">Modal Proceed</div>
       <p class="pb-4 text-center">Checkout functionality will be implemented soon!</p>
-      <Button text="Proceed to Checkout" @on-click="hideModal" />
+
+      <Button @click="hideModal" class="w-full" size="lg">Proceed to Checkout</Button>
     </div>
   </Modal>
 </template>

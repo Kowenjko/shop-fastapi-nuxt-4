@@ -18,8 +18,8 @@ const clearCart = () => {
       <div class="py-4 text-center text-2xl font-bold">Clear Cart</div>
       <p class="pb-4 text-center">Are you sure you want to clear your cart?</p>
       <div class="flex gap-2">
-        <Button text="Clear Cart" @on-click="clearCart" variant="destructive" />
-        <Button text="Cancel" @on-click="hideModal" />
+        <Button @click="clearCart" variant="destructive" class="w-1/2" size="lg">Clear Cart</Button>
+        <Button @click="hideModal" class="w-1/2" size="lg">Cancel</Button>
       </div>
     </div>
   </Modal>
