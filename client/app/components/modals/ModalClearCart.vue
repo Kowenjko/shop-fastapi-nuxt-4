@@ -16,7 +16,7 @@ const clearCart = () => cartStore.clearCart()
         <DialogClose as-child>
           <Button variant="outline"> Cancel </Button>
         </DialogClose>
-        <Button @click="clearCart">Clear Cart </Button>
+        <Button @click="clearCart" variant="destructive">Clear Cart </Button>
       </DialogFooter>
     </DialogContent>
   </Dialog>

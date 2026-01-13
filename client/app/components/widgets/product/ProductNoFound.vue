@@ -1,18 +1,15 @@
 <script lang="ts" setup>
-const emit = defineEmits<{ clearFilter: [] }>();
+import { ShoppingCartIcon } from 'lucide-vue-next'
 
-const clearFilter = () => emit("clearFilter");
+const emit = defineEmits<{ clearFilter: [] }>()
+
+const clearFilter = () => emit('clearFilter')
 </script>
 
 <template>
   <div class="py-12 text-center">
-    <IconNoProductFound />
+    <ShoppingCartIcon class="mx-auto mb-6 h-28 w-28 text-gray-300" />
     <p class="text-lg font-medium text-gray-500">No products found</p>
-    <button
-      @click="clearFilter"
-      class="mt-4 font-medium text-black hover:underline"
-    >
-      View all products
-    </button>
+    <Button class="mt-4" @click="clearFilter">View all products</Button>
   </div>
 </template>

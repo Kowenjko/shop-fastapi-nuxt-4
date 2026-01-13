@@ -26,7 +26,7 @@ const goToRedirectLink = () => $fetch('https://api.shop.local/auth/github/link?p
 <template>
   <div class="min-h-screen bg-white">
     <div class="mx-auto max-w-7xl px-4 py-8">
-      <TitlePage title="Product Catalog" description="Discover our amazing products" />
+      <!-- <TitlePage title="Product Catalog" description="Discover our amazing products" /> -->
 
       <!-- <div class="flex gap-5 py-4">
         <button @click="goToRedirect">Redirect</button>
@@ -57,7 +57,7 @@ const goToRedirectLink = () => $fetch('https://api.shop.local/auth/github/link?p
             <ProductCard v-for="product in filteredProducts" :key="product.id" :product="product" />
           </div>
 
-          <ProductNoFound v-else @clear-filter="productsStore.clearCategoryFilter" />
+          <ProductNoFound @clear-filter="productsStore.clearCategoryFilter" />
         </main>
       </div>
     </div>

@@ -10,13 +10,11 @@ const clearFilter = () => emit('clearFilter')
 </script>
 
 <template>
-  <div class="mb-6 flex items-center justify-between">
-    <p class="text-gray-700">
+  <div class="mb-2 flex items-center justify-between">
+    <p class="py-1.5 text-gray-700">
       <span class="font-bold">{{ productsCount }}</span>
       {{ productsCount === 1 ? 'product' : 'products' }} found
     </p>
-
-    <!-- Кнопка сброса фильтра -->
 
     <Button variant="ghost" v-if="selectedCategory" @click="clearFilter"> Clear filter </Button>
   </div>

@@ -1,12 +1,14 @@
 <script lang="ts" setup>
+import CardContent from '~/components/ui/card/CardContent.vue'
+
 const { item } = defineProps<{ item: CartItemI }>()
 
 const { updating, increaseQuantity, decreaseQuantity, handleRemove } = useCartActions()
 </script>
 
 <template>
-  <div class="rounded-none border-2 border-gray-100 bg-white p-6 shadow-sm transition-colors hover:border-gray-300">
-    <div class="flex gap-6">
+  <Card class="transition-all hover:shadow-lg">
+    <CardContent class="flex gap-6">
       <!-- Изображение товара -->
       <div class="h-24 w-24 shrink-0">
         <nuxt-img
@@ -33,6 +35,6 @@ const { updating, increaseQuantity, decreaseQuantity, handleRemove } = useCartAc
       </div>
 
       <CartItemTotal :subtotal="item.subtotal" />
-    </div>
-  </div>
+    </CardContent>
+  </Card>
 </template>

@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import CardContent from '~/components/ui/card/CardContent.vue'
+
 const {
   product,
   adding = false,
@@ -15,8 +17,8 @@ const addToCart = () => emit('addToCart')
 </script>
 
 <template>
-  <div class="overflow-hidden rounded-none border-2 border-gray-100 bg-white shadow-sm">
-    <div class="grid grid-cols-1 gap-8 p-8 md:grid-cols-2">
+  <Card class="overflow-hidden">
+    <CardContent class="grid grid-cols-1 gap-8 p-8 md:grid-cols-2">
       <!-- Изображение -->
       <div class="aspect-square overflow-hidden rounded-none bg-gray-50">
         <nuxt-img
@@ -56,33 +58,26 @@ const addToCart = () => emit('addToCart')
 
         <!-- Кнопка добавления в корзину -->
         <div class="mt-auto">
-          <button
-            @click="addToCart"
-            :disabled="adding"
-            class="w-full cursor-pointer rounded-none bg-black px-6 py-4 text-lg font-semibold text-white transition-colors hover:bg-gray-900 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {{ adding ? 'Adding to cart...' : 'Add to Cart' }}
-          </button>
+          <Button @click="addToCart" :disabled="adding" size="lg" class="w-full">{{
+            adding ? 'Adding to cart...' : 'Add to Cart'
+          }}</Button>
 
           <!-- Уведомление об успешном добавлении -->
           <transition name="fade">
-            <div
-              v-if="showNotification"
-              class="mt-4 rounded-none bg-black px-4 py-3 text-center font-medium text-white"
-            >
+            <div v-if="showNotification" class="mt-2 text-center text-sm font-medium text-green-600">
               ✓ Product added to cart!
             </div>
           </transition>
         </div>
 
         <!-- Дополнительная информация -->
-        <div class="mt-8 border-t-2 border-gray-100 pt-6">
-          <p class="text-sm text-gray-500">Product ID: {{ product.id }}</p>
-          <p class="text-sm text-gray-500">Added: {{ formatDate(product.created_at) }}</p>
+        <div class="mt-8 border-t border-gray-300 pt-6">
+          <p class="text-sm">Product ID: {{ product.id }}</p>
+          <p class="text-sm">Added: {{ formatDate(product.created_at) }}</p>
         </div>
       </div>
-    </div>
-  </div>
+    </CardContent>
+  </Card>
 </template>
 <style scoped>
 .fade-enter-active,

@@ -28,7 +28,7 @@ const handleAddToCart = async () => {
 <template>
   <div class="min-h-screen bg-white">
     <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <Breadcrumb class="mb-5">
+      <Breadcrumb class="mb-2">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink @click="router.push(HOME_LINK)" class="cursor-pointer"> Home </BreadcrumbLink>

@@ -34,7 +34,7 @@ async def get_products(
 async def get_products_paginated(
     request: Request,
     page: int = 1,
-    per_page: int = 9,
+    per_page: int = 15,
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     service = ProductService(session)

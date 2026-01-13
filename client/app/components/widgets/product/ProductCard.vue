@@ -23,9 +23,7 @@ const handleAddToCart = async () => {
 </script>
 
 <template>
-  <div
-    class="overflow-hidden rounded-lg border-2 border-gray-200 bg-white transition-all duration-300 hover:border-black hover:shadow-lg"
-  >
+  <Card class="group overflow-hidden py-0 transition-all duration-300 hover:shadow-lg">
     <!-- Изображение товара -->
     <router-link :to="{ ...PRODUCT_DETAIL_LINK, params: { id: product.id } }">
       <div class="aspect-square overflow-hidden bg-gray-100">
@@ -33,7 +31,7 @@ const handleAddToCart = async () => {
           v-if="product.image_url"
           :src="product.image_url"
           :alt="product.name"
-          class="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+          class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           placeholder
           width="262"
           height="262"
@@ -65,5 +63,5 @@ const handleAddToCart = async () => {
         <div v-if="showNotification" class="mt-2 text-center text-sm font-medium text-green-600">✓ Added to cart!</div>
       </transition>
     </div>
-  </div>
+  </Card>
 </template>

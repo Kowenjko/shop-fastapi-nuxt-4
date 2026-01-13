@@ -18,7 +18,7 @@ const {
       :to
       class="mt-6 rounded-none bg-black px-8 py-3 text-lg font-semibold text-white transition-colors hover:bg-gray-900"
     >
-      Return to catalog
+      Return to home
     </router-link>
   </div>
   <div class="py-12 text-center" v-else>

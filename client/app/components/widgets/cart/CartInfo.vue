@@ -14,7 +14,7 @@ const cartStore = useCartStore()
       <span class="font-medium text-green-600">Free</span>
     </div>
 
-    <div class="border-t-2 border-gray-100 pt-6">
+    <div class="border-t border-gray-300 pt-6">
       <div class="flex justify-between text-xl font-bold text-black">
         <span>Total</span>
         <span>${{ cartStore.totalPrice.toFixed(2) }}</span>

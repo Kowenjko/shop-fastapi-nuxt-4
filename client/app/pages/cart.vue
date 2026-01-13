@@ -30,11 +30,15 @@ await cartStore.fetchCartDetails()
 
         <!-- Итоговая информация -->
         <div class="lg:col-span-1">
-          <div class="sticky top-24 rounded-none border-2 border-gray-100 bg-white p-8 shadow-sm">
-            <h2 class="mb-8 text-2xl font-bold text-black">Order Summary</h2>
-            <CartInfo />
-            <CartActions @proceed="handleCheckout" @clear="handleClearCart" />
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle class="text-2xl">Order Summary</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CartInfo />
+              <CartActions @proceed="handleCheckout" @clear="handleClearCart" />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
