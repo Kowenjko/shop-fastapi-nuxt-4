@@ -17,12 +17,7 @@ const clearFilter = () => emit('clearFilter')
     </p>
 
     <!-- Кнопка сброса фильтра -->
-    <button
-      v-if="selectedCategory"
-      @click="clearFilter"
-      class="cursor-pointer text-sm font-medium text-gray-500 transition-colors hover:text-black"
-    >
-      Clear filter
-    </button>
+
+    <Button variant="ghost" v-if="selectedCategory" @click="clearFilter"> Clear filter </Button>
   </div>
 </template>

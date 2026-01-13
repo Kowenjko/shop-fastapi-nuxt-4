@@ -17,27 +17,37 @@ const selectCategory = (categoryId: number | null) => {
 </script>
 
 <template>
-  <div class="rounded-lg border-2 border-gray-200 bg-white p-6">
-    <h2 class="mb-6 text-2xl font-bold text-black">Categories</h2>
+  <Card>
+    <CardHeader>
+      <CardTitle> Categories </CardTitle>
+    </CardHeader>
 
-    <ul class="space-y-2">
-      <li>
-        <ButtonCategory
-          :is-active="!productsStore.selectedCategory"
-          name="All Categories"
-          :count="totalProductsCount"
-          @select-category="selectCategory(null)"
-        />
-      </li>
+    <CardContent>
+      <ul class="space-y-2">
+        <li>
+          <Button
+            @click="selectCategory(null)"
+            class="flex w-full justify-between"
+            size="lg"
+            :variant="productsStore.selectedCategory ? 'ghost' : 'default'"
+          >
+            <span>All Categories</span>
+            <span v-if="!productsStore.selectedCategory">({{ totalProductsCount }})</span>
+          </Button>
+        </li>
 
-      <li v-for="category in categories" :key="category.id">
-        <ButtonCategory
-          :is-active="productsStore.selectedCategory === category.id"
-          :name="category.name"
-          :count="productsCount"
-          @select-category="selectCategory(category.id!)"
-        />
-      </li>
-    </ul>
-  </div>
+        <li v-for="category in categories" :key="category.id">
+          <Button
+            @click="selectCategory(category.id!)"
+            class="flex w-full justify-between"
+            size="lg"
+            :variant="productsStore.selectedCategory === category.id ? 'default' : 'ghost'"
+          >
+            <span>{{ category.name }}</span>
+            <span v-if="productsStore.selectedCategory === category.id">({{ productsCount }})</span>
+          </Button>
+        </li>
+      </ul>
+    </CardContent>
+  </Card>
 </template>

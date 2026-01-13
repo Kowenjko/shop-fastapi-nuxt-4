@@ -28,7 +28,17 @@ const handleAddToCart = async () => {
 <template>
   <div class="min-h-screen bg-white">
     <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <ButtonBack @click="router.push(HOME_LINK)" />
+      <Breadcrumb class="mb-5">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink @click="router.push(HOME_LINK)" class="cursor-pointer"> Home </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{{ product?.name }}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
 
       <!-- Состояние загрузки -->
       <LoadingData v-if="pending" />
