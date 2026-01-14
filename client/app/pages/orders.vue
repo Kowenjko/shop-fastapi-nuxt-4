@@ -1,4 +1,8 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+definePageMeta({
+  layout: 'profile',
+})
+</script>
 
 <template>
   <div class="min-h-screen bg-white">
