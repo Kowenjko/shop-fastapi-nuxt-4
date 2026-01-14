@@ -40,12 +40,14 @@ const cartStore = useCartStore()
           <nuxt-link :to="CART_LINK">
             <div class="relative">
               <ShoppingCartIcon class="h-6 w-6" />
-              <Badge
-                v-if="cartStore.itemsCount && cartStore.itemsCount > 0"
-                class="absolute -top-3 -right-3 h-5 w-5 rounded-full tabular-nums"
-              >
-                {{ cartStore.itemsCount }}
-              </Badge>
+              <ClientOnly>
+                <Badge
+                  v-if="cartStore.itemsCount && cartStore.itemsCount > 0"
+                  class="absolute -top-3 -right-3 h-5 w-5 rounded-full tabular-nums"
+                >
+                  {{ cartStore.itemsCount }}
+                </Badge>
+              </ClientOnly>
             </div>
           </nuxt-link>
         </div>

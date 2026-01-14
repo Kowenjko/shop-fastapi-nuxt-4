@@ -57,7 +57,7 @@ const goToRedirectLink = () => $fetch('https://api.shop.local/auth/github/link?p
             <ProductCard v-for="product in filteredProducts" :key="product.id" :product="product" />
           </div>
 
-          <ProductNoFound @clear-filter="productsStore.clearCategoryFilter" />
+          <ProductNoFound v-else @clear-filter="productsStore.clearCategoryFilter" />
         </main>
       </div>
     </div>

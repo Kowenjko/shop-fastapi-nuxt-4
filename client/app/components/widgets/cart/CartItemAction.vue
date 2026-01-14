@@ -12,12 +12,12 @@ const remove = () => emit('remove')
 
 <template>
   <div class="flex items-center gap-2">
-    <div class="flex items-center rounded-none border-2 border-gray-100 text-black">
+    <div class="flex items-center rounded-sm border border-gray-300 text-black shadow">
       <Button @click="minus" :disabled="updating" variant="ghost" size="icon">
         <MinusIcon class="h-5 w-5" />
       </Button>
 
-      <span class="min-w-10 px-4 py-2 text-center font-medium">
+      <span class="min-w-10 px-4 py-1 text-center font-medium">
         {{ quantity }}
       </span>
 
