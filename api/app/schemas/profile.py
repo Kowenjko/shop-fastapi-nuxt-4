@@ -28,4 +28,6 @@ class ProfilePostResponse(ProfileBase):
 class ProfileResponse(ProfilePostResponse):
 
     user: UserResponse = Field(..., description="Associated user details")
-    city: CityResponse = Field(..., description="Associated city details")
+    city: CityResponse | None = None
+
+    model_config = ConfigDict(from_attributes=True)

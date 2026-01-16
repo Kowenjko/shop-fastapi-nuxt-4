@@ -1,6 +1,8 @@
 from typing import List
 from app.repositories.user_repository import UserRepository
 from app.schemas.user import CreateUser, UserResponse
+from app.schemas.profile import ProfileCreate
+from app.services.profile_service import ProfileService
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.utils import hash_password
@@ -9,6 +11,7 @@ from app.utils import hash_password
 class UserService:
     def __init__(self, session: AsyncSession):
         self.repository = UserRepository(session)
+        self.profile_service = ProfileService(session)
 
     async def get_all_users(self) -> List[UserResponse]:
         users = await self.repository.get_all()
@@ -55,6 +58,18 @@ class UserService:
         )
         if not user:
             return None
+
+        profile_data = ProfileCreate(
+            first_name=user.username,
+            last_name=None,
+            phone=None,
+            age=None,
+            user_id=user.id,
+            city_id=None,
+        )
+
+        await self.profile_service.create_profile(profile_data)
+
         return UserResponse.model_validate(user)
 
     def _not_user(self, user, text: str):
