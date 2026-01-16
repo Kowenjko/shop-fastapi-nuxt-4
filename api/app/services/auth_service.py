@@ -58,5 +58,11 @@ class AuthService:
             httponly=True,
             samesite="lax",
         )
+        response.set_cookie(
+            "access_token",
+            access,
+            httponly=True,
+            samesite="lax",
+        )
 
         return access, refresh
