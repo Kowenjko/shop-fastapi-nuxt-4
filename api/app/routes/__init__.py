@@ -15,11 +15,10 @@ from .oauth import router as oauth_router
 from .ws_orders import router as ws_orders_router
 
 router = APIRouter(prefix=settings.api.prefix)
-auth_router = APIRouter(prefix=settings.api.auth)
 ws_router = APIRouter(prefix=settings.ws.prefix)
 
-auth_router.include_router(auth_base_router)
-auth_router.include_router(oauth_router)
+router.include_router(auth_base_router, prefix=settings.api.auth)
+router.include_router(oauth_router, prefix=settings.api.auth)
 
 router.include_router(users_router, prefix=settings.api.users)
 router.include_router(profile_router, prefix=settings.api.profile)

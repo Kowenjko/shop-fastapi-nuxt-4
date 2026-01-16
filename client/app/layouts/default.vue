@@ -5,6 +5,8 @@
     <AppFooter />
     <ModalProceedCart />
     <ModalClearCart />
+    <ModalLogin />
+    <ModalRegister />
   </div>
 </template>
 s

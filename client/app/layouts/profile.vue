@@ -27,7 +27,7 @@ const route = useRoute()
             <span> Orders</span>
           </nuxt-link>
         </li>
-        <li class="border-t border-gray-300">
+        <li class="cursor-pointer border-t border-gray-300">
           <div class="mt-1 flex items-center gap-2 rounded p-2 pt-3 transition-all hover:bg-gray-100">
             <LogOutIcon class="h-5 w-5" />
             <span>LogOut</span>

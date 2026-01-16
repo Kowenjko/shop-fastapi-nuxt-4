@@ -15,7 +15,7 @@ from app.schemas.user import UserResponse
 from app.enums import TOKEN_TYPE_FIELD, ACCESS_TOKEN_TYPE, REFRESH_TOKEN_TYPE
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login/")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login/")
 
 
 def get_current_token_payload(

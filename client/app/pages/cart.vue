@@ -19,8 +19,8 @@ await cartStore.fetchCartDetails()
       <TitlePage title="Shopping Cart" description="Review your items before checkout" />
 
       <ClientOnly>
-        <LoadingData v-if="cartStore.loading" text="Loading cart..." />
-        <CartEmpty v-else-if="!cartStore.hasItems" />
+        <!-- <LoadingData v-if="cartStore.loading" text="Loading cart..." /> -->
+        <CartEmpty v-if="!cartStore.hasItems" />
 
         <!-- Содержимое корзины -->
         <div v-else class="grid grid-cols-1 gap-8 lg:grid-cols-3">

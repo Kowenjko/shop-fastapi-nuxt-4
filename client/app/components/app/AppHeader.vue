@@ -2,6 +2,8 @@
 import { ShoppingBagIcon, ShoppingCartIcon, UserIcon, LogOutIcon } from 'lucide-vue-next'
 
 const cartStore = useCartStore()
+const modalStore = useModalStore()
+const openModelLogin = () => (modalStore.modalLoginIn.show = true)
 </script>
 
 <template>
@@ -15,7 +17,9 @@ const cartStore = useCartStore()
         <!-- Навигация -->
 
         <div class="flex items-center gap-5">
-          <UserIcon class="h-6 w-6" />
+          <button @click="openModelLogin" class="rounded-md p-2 transition-all hover:bg-gray-100">
+            <UserIcon class="h-6 w-6" />
+          </button>
 
           <Menubar class="border-none shadow-none">
             <MenubarMenu>
