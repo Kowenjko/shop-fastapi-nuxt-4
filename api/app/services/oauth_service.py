@@ -2,6 +2,7 @@ from typing import Literal
 from fastapi import HTTPException, Response, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.schemas.profile import ProfileCreate
 from app.core.oauth import oauth
 from app.enums import Providers, PROVIDER_CONFIG
 
@@ -10,6 +11,7 @@ from app.repositories.oauth_repository import OAuthRepository
 from app.repositories.user_repository import UserRepository
 
 from app.services.auth_service import AuthService
+from app.services.profile_service import ProfileService
 
 
 def get_client_config(provider: Providers):
@@ -31,6 +33,7 @@ class OAuthService:
         self.oauth_repository = OAuthRepository(session)
         self.auth_repository = AuthRepository(session)
         self.auth_service = AuthService(session)
+        self.profile_service = ProfileService(session)
 
     async def oauth_login(
         self,
@@ -57,6 +60,16 @@ class OAuthService:
                     }
                 )
 
+                profile_data = ProfileCreate(
+                    first_name=user.username,
+                    last_name=None,
+                    phone=None,
+                    age=None,
+                    user_id=user.id,
+                    city_id=None,
+                )
+
+                await self.profile_service.create_profile(profile_data)
             await self.oauth_repository.create(provider, provider_id, user.id)
 
         return await self.auth_service.issue_tokens(user, response)

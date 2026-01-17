@@ -5,7 +5,7 @@ import { useForm } from 'vee-validate'
 import * as z from 'zod'
 
 const modalStore = useModalStore()
-const { login } = useAuth()
+const { login, loginByProvider } = useAuth()
 
 const formSchema = toTypedSchema(
   z.object({
@@ -84,7 +84,7 @@ watch(
         </div>
         <DialogFooter>
           <Button type="submit"> Login </Button>
-          <Button type="button" variant="outline" size="icon"> <GithubIcon /> </Button>
+          <Button @click="loginByProvider(GITHUB)" type="button" variant="outline" size="icon"> <GithubIcon /> </Button>
         </DialogFooter>
       </form>
     </DialogContent>

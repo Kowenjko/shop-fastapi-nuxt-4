@@ -3,6 +3,7 @@ import { authAPI } from '@/api'
 export const useAuth = () => {
   const loading = ref(false)
   const authStore = useAuthStore()
+  const { baseURL } = useBaseUrlApi()
 
   const authAction = async <T>(action: () => Promise<T>) => {
     loading.value = true
@@ -27,5 +28,8 @@ export const useAuth = () => {
   const refresh = () => authAction(() => authAPI.refresh())
   const logout = () => authAction(() => authAPI.logout())
 
-  return { loading, login, register, refresh, logout }
+  const loginByProvider = async (provider: typeof GITHUB | typeof GOOGLE) =>
+    navigateTo(baseURL + '/' + AUTH + provider + LOGIN, { external: true })
+
+  return { loading, login, register, refresh, logout, loginByProvider }
 }
