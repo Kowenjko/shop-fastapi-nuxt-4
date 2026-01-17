@@ -29,7 +29,7 @@ export const useAuth = () => {
   const logout = () => authAction(() => authAPI.logout())
 
   const loginByProvider = async (provider: typeof GITHUB | typeof GOOGLE) =>
-    navigateTo(baseURL + '/' + AUTH + provider + LOGIN, { external: true })
+    navigateTo(baseURL + AUTH + provider + LOGIN, { external: true })
 
   return { loading, login, register, refresh, logout, loginByProvider }
 }
