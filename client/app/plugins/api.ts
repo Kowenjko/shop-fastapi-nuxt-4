@@ -1,5 +1,11 @@
+import { defineNuxtPlugin } from '#app'
+import { useAuthStore } from '@/stores/auth'
+
 export default defineNuxtPlugin((nuxtApp) => {
   const { baseURL } = useBaseUrlApi()
+
+  //@ts-ignore
+  const authStore = useAuthStore(nuxtApp.$pinia)
 
   const api = $fetch.create({
     baseURL,
@@ -8,7 +14,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     },
 
     onRequest({ options }) {
-      const token = process.client ? useCookie('token')?.value : null
+      const token = process.client ? authStore.token : null
       if (token) options.headers.set('Authorization', `Bearer ${token}`)
     },
 

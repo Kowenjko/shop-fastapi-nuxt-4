@@ -26,6 +26,7 @@ async def login(
     user_data: OAuth2PasswordRequestForm = Depends(),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
+
     service = AuthService(session)
     access, refresh = await service.login(response, user_data)
 

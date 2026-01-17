@@ -56,13 +56,14 @@ class AuthService:
             "refresh_token",
             refresh,
             httponly=True,
-            samesite="lax",
+            secure=True,
+            samesite="none",
         )
-        response.set_cookie(
-            "access_token",
-            access,
-            httponly=True,
-            samesite="lax",
-        )
+        # response.set_cookie(
+        #     "access_token",
+        #     access,
+        #     httponly=True,
+        #     samesite="lax",
+        # )
 
         return access, refresh
