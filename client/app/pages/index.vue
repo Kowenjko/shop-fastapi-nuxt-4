@@ -16,23 +16,12 @@ const {
 
 await fetchCategories()
 await fetchProducts()
-
-const goToRedirect = () => navigateTo('https://api.shop.local/auth/github/login', { external: true })
-const goToRedirectUnlink = () => $fetch('https://api.shop.local/auth/github/unlink?user_id=15')
-const goToRedirectLink = () => $fetch('https://api.shop.local/auth/github/link?provider_id=74559496&user_id=15')
-// navigateTo('https://api.shop.local/auth/github/link?provider_id=74559496&user_id=15', { external: true })
 </script>
 
 <template>
   <div class="min-h-screen bg-white">
     <div class="mx-auto max-w-7xl px-4 py-8">
       <!-- <TitlePage title="Product Catalog" description="Discover our amazing products" /> -->
-
-      <!-- <div class="flex gap-5 py-4">
-        <button @click="goToRedirect">Redirect</button>
-        <button @click="goToRedirectLink">Redirect Link</button>
-        <button @click="goToRedirectUnlink">Redirect UnLink</button>
-      </div> -->
 
       <div class="flex gap-8">
         <aside class="w-64 shrink-0">

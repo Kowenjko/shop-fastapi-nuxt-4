@@ -12,7 +12,7 @@ export interface ProfileI {
   first_name: string
   last_name: string
   phone: string
-  city_id: string
+  city_id: string | null
   age: number
   user: UserI
   city: CityI
