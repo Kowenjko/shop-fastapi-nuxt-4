@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+const authStore = useAuthStore()
+
 definePageMeta({
   layout: 'profile',
   middleware: ['auth'],

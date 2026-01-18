@@ -15,7 +15,7 @@ class ProfileCreate(ProfileBase):
     user_id: int = Field(..., description="User ID")
 
 
-class ProfileUpdate(ProfileCreate):
+class ProfileUpdate(ProfileBase):
     pass
 
 

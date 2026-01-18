@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { UserIcon, ShoppingBasketIcon, LogOutIcon } from 'lucide-vue-next'
 
-const { logout, refresh } = useAuth()
+const { logout } = useAuth()
 const route = useRoute()
 
-const logoutUSer = async () => {
+const logoutUser = async () => {
   await logout()
   await navigateTo(HOME_LINK)
 }
@@ -12,7 +12,7 @@ const logoutUSer = async () => {
 
 <template>
   <AppHeader />
-  <ResizablePanelGroup direction="horizontal">
+  <ResizablePanelGroup direction="horizontal" class="mx-auto max-w-7xl px-4">
     <ResizablePanel :default-size="20">
       <ul class="flex flex-col gap-1 p-4">
         <li
@@ -35,11 +35,11 @@ const logoutUSer = async () => {
         </li>
         <li class="cursor-pointer border-t border-gray-300">
           <button
-            @click="logoutUSer"
+            @click="logoutUser"
             class="mt-1 flex w-full items-center gap-2 rounded p-2 pt-3 transition-all hover:bg-gray-100"
           >
             <LogOutIcon class="h-5 w-5" />
-            <span>LogOut</span>
+            <span>Logout</span>
           </button>
         </li>
       </ul>

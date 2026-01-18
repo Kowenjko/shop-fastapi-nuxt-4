@@ -14,7 +14,9 @@ const logoutUSer = async () => {
   await navigateTo(HOME_LINK)
 }
 
-onMounted(async () => (!authStore.isAuthenticated ? await refresh() : null))
+onMounted(async () => {
+  !authStore.isAuthenticated ? await refresh() : null
+})
 </script>
 
 <template>
@@ -28,29 +30,33 @@ onMounted(async () => (!authStore.isAuthenticated ? await refresh() : null))
         <!-- Навигация -->
 
         <div class="flex items-center gap-5">
-          <Menubar class="border-none shadow-none" v-if="authStore.token">
-            <MenubarMenu>
-              <MenubarTrigger class="cursor-pointer">
-                <Avatar> <AvatarFallback class="border-2 border-black bg-none">VK</AvatarFallback> </Avatar>
-              </MenubarTrigger>
-              <MenubarContent>
-                <MenubarItem>
-                  <nuxt-link :to="PROFILE_LINK" class="w-full">Profile</nuxt-link>
-                </MenubarItem>
-                <MenubarItem>
-                  <nuxt-link :to="ORDERS_LINK" class="w-full">Orders</nuxt-link>
-                </MenubarItem>
-                <MenubarSeparator />
-                <MenubarItem>
-                  <button @click="logoutUSer" class="w-full"><LogOutIcon class="h-6 w-6" /></button>
-                </MenubarItem>
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
-          <button v-else @click="openModelLogin" class="rounded-md p-2 transition-all hover:bg-gray-100">
-            <UserIcon class="h-6 w-6" />
-          </button>
+          <ClientOnly>
+            <Menubar class="border-none shadow-none" v-if="authStore.token">
+              <MenubarMenu>
+                <MenubarTrigger class="cursor-pointer">
+                  <Avatar>
+                    <AvatarFallback class="border-2 border-black bg-none">{{ authStore.upperCaseName }}</AvatarFallback>
+                  </Avatar>
+                </MenubarTrigger>
+                <MenubarContent>
+                  <MenubarItem>
+                    <nuxt-link :to="PROFILE_LINK" class="w-full">Profile</nuxt-link>
+                  </MenubarItem>
+                  <MenubarItem>
+                    <nuxt-link :to="ORDERS_LINK" class="w-full">Orders</nuxt-link>
+                  </MenubarItem>
+                  <MenubarSeparator />
+                  <MenubarItem>
+                    <button @click="logoutUSer" class="w-full"><LogOutIcon class="h-6 w-6" /></button>
+                  </MenubarItem>
+                </MenubarContent>
+              </MenubarMenu>
+            </Menubar>
 
+            <button v-else @click="openModelLogin" class="rounded-md p-2 transition-all hover:bg-gray-100">
+              <UserIcon class="h-6 w-6" />
+            </button>
+          </ClientOnly>
           <nuxt-link :to="CART_LINK">
             <div class="relative">
               <ShoppingCartIcon class="h-6 w-6" />

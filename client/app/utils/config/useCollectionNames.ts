@@ -2,6 +2,8 @@ export const PRODUCTS = 'products/'
 export const CATEGORY = 'category/'
 export const CATEGORIES = 'categories/'
 export const CART = 'cart/'
+export const PROFILE = 'profile/'
+export const ORDERS = 'orders/'
 
 // actions
 export const ADD = 'add/'

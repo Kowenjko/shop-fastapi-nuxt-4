@@ -11,10 +11,15 @@ from app.services.dependencies import profile_by_user_id
 router = APIRouter(tags=["Profile"])
 
 
-@router.get("/", response_model=ProfileResponse, status_code=status.HTTP_200_OK)
+@router.get("/", status_code=status.HTTP_200_OK)
 async def get_profile(
     profile: Profile = Depends(profile_by_user_id),
 ):
+    if not profile:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Profile not found",
+        )
     return profile
 
 
