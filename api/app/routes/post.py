@@ -82,7 +82,7 @@ async def create_post(
 async def update_post(
     post_id: int,
     post_data: PostUpdate,
-    user_id: int,
+    user_id: int = Depends(get_current_user_id),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     service = PostService(session)
@@ -93,8 +93,8 @@ async def update_post(
 @router.delete("/{post_id}/", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_post(
     post_id: int,
-    user_id: int,
     session: Annotated[AsyncSession, Depends(db_helper.scoped_session_dependency)],
+    user_id: int = Depends(get_current_user_id),
 ):
     service = PostService(session)
     await service.delete_post(post_id, user_id)

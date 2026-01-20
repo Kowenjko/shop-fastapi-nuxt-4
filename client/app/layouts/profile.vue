@@ -60,4 +60,5 @@ const logoutUser = async () => {
   </ResizablePanelGroup>
 
   <AppFooter />
+  <ModalPost />
 </template>
