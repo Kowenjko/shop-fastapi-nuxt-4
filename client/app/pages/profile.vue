@@ -2,7 +2,6 @@
 import { UserPenIcon, PencilOffIcon } from 'lucide-vue-next'
 
 const authStore = useAuthStore()
-
 const showEdit = ref(false)
 
 definePageMeta({
@@ -20,7 +19,7 @@ definePageMeta({
         <Card v-if="!showEdit">
           <CardHeader class="relative">
             <CardTitle>{{ authStore.profile?.first_name }} {{ authStore.profile?.last_name }}</CardTitle>
-            <Button size="sm" variant="outline" class="absolute -top-3 right-3" @click="showEdit = !showEdit">
+            <Button size="icon" variant="outline" class="absolute -top-3 right-3" @click="showEdit = !showEdit">
               <UserPenIcon />
             </Button>
           </CardHeader>
@@ -35,7 +34,7 @@ definePageMeta({
         <Card v-if="showEdit" class="mt-2">
           <CardHeader class="relative">
             <CardTitle>Edit {{ authStore.profile?.first_name }} </CardTitle>
-            <Button size="sm" variant="outline" class="absolute -top-3 right-3" @click="showEdit = !showEdit">
+            <Button size="icon" variant="outline" class="absolute -top-3 right-3" @click="showEdit = !showEdit">
               <PencilOffIcon />
             </Button>
           </CardHeader>

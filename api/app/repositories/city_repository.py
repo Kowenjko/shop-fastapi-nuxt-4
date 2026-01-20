@@ -64,6 +64,7 @@ class CityRepository:
         q: Optional[str] = None,
         region: Optional[str] = None,
         district: Optional[str] = None,
+        community: Optional[str] = None,
         with_total: bool = False,
     ) -> tuple[list[City], bool, bool, Optional[int]]:
         offset = (page - 1) * per_page
@@ -90,6 +91,8 @@ class CityRepository:
 
         if district:
             stmt = stmt.where(City.district == district)
+        if community:
+            stmt = stmt.where(City.community == community)
 
         stmt = stmt.limit(per_page + 1).offset(offset)
 
@@ -116,6 +119,9 @@ class CityRepository:
 
             if district:
                 total_stmt = total_stmt.where(City.district == district)
+
+            if community:
+                total_stmt = total_stmt.where(City.community == community)
 
             total_items = await self.session.scalar(total_stmt)
 

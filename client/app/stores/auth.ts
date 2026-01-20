@@ -11,7 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
   const upperCaseName = computed(() => {
     if (!profile.value) return ''
 
-    return [profile.value?.first_name, profile.value?.last_name].map((n) => n?.[0]?.toUpperCase() ?? '').join('')
+    return [profile.value?.first_name].map((n) => n?.[0]?.toUpperCase() ?? '').join('')
   })
   return { token, profile, isAuthenticated, setToken, upperCaseName }
 })

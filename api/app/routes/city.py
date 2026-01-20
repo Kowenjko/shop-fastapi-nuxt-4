@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter, Depends, Query, Request, status
+from fastapi import APIRouter, Depends, Request, status
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_cache.decorator import cache
@@ -18,9 +18,10 @@ async def get_cities_paginated(
     request: Request,
     page: int = 1,
     per_page: int = 10,
-    name: str | None = Query(None, min_length=2),
+    name: str | None = None,
     region: str | None = None,
     district: str | None = None,
+    community: str | None = None,
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     service = CityService(session)
@@ -34,16 +35,8 @@ async def get_cities_paginated(
         q=name,
         region=region,
         district=district,
+        community=community,
     )
-
-
-@router.get("/{city_id}/", response_model=CityResponse, status_code=status.HTTP_200_OK)
-async def get_city(
-    city_id: str,
-    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
-):
-    service = CityService(session)
-    return await service.get_city_by_id(city_id)
 
 
 @router.get("/regions/", response_model=list[str])
@@ -75,3 +68,12 @@ async def get_communities(
 ):
     service = CityService(session)
     return await service.get_city_communities(region=region, district=district)
+
+
+@router.get("/{city_id}/", response_model=CityResponse, status_code=status.HTTP_200_OK)
+async def get_city(
+    city_id: str,
+    session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+):
+    service = CityService(session)
+    return await service.get_city_by_id(city_id)

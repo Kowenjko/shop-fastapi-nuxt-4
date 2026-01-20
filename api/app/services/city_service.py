@@ -23,6 +23,7 @@ class CityService:
         q: str | None = None,
         region: str | None = None,
         district: str | None = None,
+        community: str | None = None,
     ) -> CityMetaResponse:
 
         with_total = page == 1
@@ -34,6 +35,7 @@ class CityService:
                 q=q,
                 region=region,
                 district=district,
+                community=community,
                 with_total=with_total,
             )
         )
@@ -51,6 +53,8 @@ class CityService:
                 params["region"] = region
             if district:
                 params["district"] = district
+            if community:
+                params["community"] = community
 
             return f"{base_url}?{urlencode(params)}"
 

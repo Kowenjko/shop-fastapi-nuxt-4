@@ -23,3 +23,9 @@ export const LINK = 'link/'
 export const UNLINK = 'unlink/'
 export const GOOGLE = 'google/'
 export const GITHUB = 'github/'
+
+// city
+export const CITIES = 'cities/'
+export const REGIONS = 'regions/'
+export const DISTRICTS = 'districts/'
+export const COMMUNITIES = 'communities/'
