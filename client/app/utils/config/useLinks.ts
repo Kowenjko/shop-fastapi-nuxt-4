@@ -16,6 +16,10 @@ export const ORDERS_LINK = {
   name: 'orders',
 } as const satisfies RouteLocationRaw
 
+export const POSTS_LINK = {
+  name: 'posts',
+} as const satisfies RouteLocationRaw
+
 export const HOME_LINK = {
   name: 'index',
 } as const satisfies RouteLocationRaw

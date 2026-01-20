@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { UserIcon, ShoppingBasketIcon, LogOutIcon } from 'lucide-vue-next'
+import { UserIcon, ShoppingBasketIcon, LogOutIcon, BookOpenTextIcon } from 'lucide-vue-next'
 
 const { logout } = useAuth()
 const route = useRoute()
@@ -22,6 +22,15 @@ const logoutUser = async () => {
           <nuxt-link :to="PROFILE_LINK" class="flex items-center gap-2">
             <UserIcon class="h-5 w-5" />
             <span>Profile</span>
+          </nuxt-link>
+        </li>
+        <li
+          class="rounded p-2 transition-all hover:bg-gray-100"
+          :class="{ 'bg-gray-100': route.name === POSTS_LINK.name }"
+        >
+          <nuxt-link :to="POSTS_LINK" class="flex items-center gap-2">
+            <BookOpenTextIcon class="h-5 w-5" />
+            <span>Posts</span>
           </nuxt-link>
         </li>
         <li

@@ -43,6 +43,9 @@ onMounted(async () => {
                     <nuxt-link :to="PROFILE_LINK" class="w-full">Profile</nuxt-link>
                   </MenubarItem>
                   <MenubarItem>
+                    <nuxt-link :to="POSTS_LINK" class="w-full">Posts</nuxt-link>
+                  </MenubarItem>
+                  <MenubarItem>
                     <nuxt-link :to="ORDERS_LINK" class="w-full">Orders</nuxt-link>
                   </MenubarItem>
                   <MenubarSeparator />
