@@ -1,9 +1,52 @@
 <script lang="ts" setup>
-import { OrderStatus } from '~~/shared/types/order'
+import { orderAPI } from '@/api'
 
-const { data: orders } = await useAPI<OrderI[]>(ORDERS + USER, { key: 'orders' })
+const { data: orders, refresh } = await useAPI<OrderI[]>(ORDERS + USER, { key: 'orders' })
 
 const updating = ref(false)
+
+const increaseQuantity = async (order_id: number, product_id: number, count: number) => {
+  updating.value = true
+
+  try {
+    await orderAPI.updateProductCount({ order_id, product_id, count: count + 1 })
+    await refresh()
+  } catch (error) {
+  } finally {
+    updating.value = false
+  }
+}
+
+const decreaseQuantity = async (order_id: number, product_id: number, count: number) => {
+  updating.value = true
+
+  try {
+    if (count > 1) {
+      await orderAPI.updateProductCount({ order_id, product_id, count: count - 1 })
+    } else {
+      await orderAPI.removeProduct({ order_id, product_id })
+    }
+    await refresh()
+  } catch (error) {
+    console.log(error)
+  } finally {
+    updating.value = false
+  }
+}
+
+const handleRemove = async (order_id: number, product_id: number) => {
+  updating.value = true
+
+  await orderAPI.removeProduct({ order_id, product_id })
+  await refresh()
+
+  try {
+  } catch (error) {
+    console.log(error)
+  } finally {
+    updating.value = false
+  }
+}
 
 definePageMeta({
   layout: 'profile',
@@ -44,7 +87,13 @@ definePageMeta({
                       {{ item.name }}
                     </h3>
                     <p class="mb-3 text-sm text-gray-600">${{ item.unit_price.toFixed(2) }} each</p>
-                    <CartItemAction :quantity="item.count" :updating @minus="" @plus="" @remove="" />
+                    <CartItemAction
+                      :quantity="item.count"
+                      :updating
+                      @minus="decreaseQuantity(order.id, item.product_id, item.count)"
+                      @plus="increaseQuantity(order.id, item.product_id, item.count)"
+                      @remove="handleRemove(order.id, item.product_id)"
+                    />
                   </div>
                   <CartItemTotal :subtotal="item.total" />
                 </li>
