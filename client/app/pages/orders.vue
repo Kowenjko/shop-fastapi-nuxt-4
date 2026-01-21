@@ -60,50 +60,52 @@ definePageMeta({
       <TitlePage title="Orders" description="This is an order page" />
       <main>
         <div v-if="orders && orders.length > 0" class="space-y-4">
-          <Card v-for="order in orders" :key="order.id">
-            <CardHeader class="relative">
-              <CardTitle>ID - {{ order.id }} </CardTitle>
-              <CardDescription>count: {{ order.total_items }} total: ${{ order.total_price }}</CardDescription>
-              <div class="absolute -top-3 right-2">
-                <Badge v-if="order.status === OrderStatus.CANCELED" variant="destructive">{{ order.status }}</Badge>
-                <Badge v-if="order.status === OrderStatus.PAID">{{ order.status }}</Badge>
-                <Badge v-else variant="outline">{{ order.status }}</Badge>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <ul v-if="order.items && order.items.length > 0" class="space-y-6 lg:col-span-2">
-                <li class="flex gap-6 border-t pt-6" v-for="item in order.items" :key="item.product_id">
-                  <div class="h-24 w-24 shrink-0">
-                    <nuxt-img
-                      :src="item.image_url"
-                      :alt="item.name"
-                      class="h-full w-full rounded-none object-cover"
-                      @error="noImage()"
-                    />
-                  </div>
+          <template v-for="order in orders" :key="order.id">
+            <Card v-if="order.items && order.items.length > 0">
+              <CardHeader class="relative">
+                <CardTitle>ID - {{ order.id }} </CardTitle>
+                <CardDescription>count: {{ order.total_items }} total: ${{ order.total_price }}</CardDescription>
+                <div class="absolute -top-3 right-2">
+                  <Badge v-if="order.status === OrderStatus.CANCELED" variant="destructive">{{ order.status }}</Badge>
+                  <Badge v-if="order.status === OrderStatus.PAID">{{ order.status }}</Badge>
+                  <Badge v-else variant="outline">{{ order.status }}</Badge>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <ul v-if="order.items && order.items.length > 0" class="space-y-6 lg:col-span-2">
+                  <li class="flex gap-6 border-t pt-6" v-for="item in order.items" :key="item.product_id">
+                    <div class="h-24 w-24 shrink-0">
+                      <nuxt-img
+                        :src="item.image_url"
+                        :alt="item.name"
+                        class="h-full w-full rounded-none object-cover"
+                        @error="noImage()"
+                      />
+                    </div>
 
-                  <div class="grow">
-                    <h3 class="mb-2 text-lg font-bold text-black">
-                      {{ item.name }}
-                    </h3>
-                    <p class="mb-3 text-sm text-gray-600">${{ item.unit_price.toFixed(2) }} each</p>
-                    <CartItemAction
-                      :quantity="item.count"
-                      :updating
-                      @minus="decreaseQuantity(order.id, item.product_id, item.count)"
-                      @plus="increaseQuantity(order.id, item.product_id, item.count)"
-                      @remove="handleRemove(order.id, item.product_id)"
-                    />
-                  </div>
-                  <CartItemTotal :subtotal="item.total" />
-                </li>
-              </ul>
-              <div v-else>No products</div>
-            </CardContent>
-            <CardFooter>
-              <p class="text-sm text-gray-500">Ordered on: {{ new Date(order.created_at).toLocaleDateString() }}</p>
-            </CardFooter>
-          </Card>
+                    <div class="grow">
+                      <h3 class="mb-2 text-lg font-bold text-black">
+                        {{ item.name }}
+                      </h3>
+                      <p class="mb-3 text-sm text-gray-600">${{ item.unit_price.toFixed(2) }} each</p>
+                      <CartItemAction
+                        :quantity="item.count"
+                        :updating
+                        @minus="decreaseQuantity(order.id, item.product_id, item.count)"
+                        @plus="increaseQuantity(order.id, item.product_id, item.count)"
+                        @remove="handleRemove(order.id, item.product_id)"
+                      />
+                    </div>
+                    <CartItemTotal :subtotal="item.total" />
+                  </li>
+                </ul>
+                <div v-else>No products</div>
+              </CardContent>
+              <CardFooter>
+                <p class="text-sm text-gray-500">Ordered on: {{ new Date(order.created_at).toLocaleDateString() }}</p>
+              </CardFooter>
+            </Card>
+          </template>
         </div>
         <div v-else>
           <p class="text-center text-lg">You have no orders yet.</p>
