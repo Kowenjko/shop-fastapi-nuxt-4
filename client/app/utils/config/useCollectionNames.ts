@@ -6,6 +6,7 @@ export const CART = 'cart/'
 export const PROFILE = 'profile/'
 export const ORDERS = 'orders/'
 export const POSTS = 'posts/'
+export const USER = 'user/'
 
 // actions
 export const ADD = 'add/'

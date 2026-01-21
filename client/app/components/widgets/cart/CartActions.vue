@@ -7,7 +7,7 @@ const clear = () => emit('clear')
 
 <template>
   <div class="space-y-2">
-    <Button @click="proceed" size="lg" class="w-full"> Proceed to Checkout </Button>
+    <Button @click="proceed" size="lg" class="w-full"> Create Order </Button>
 
     <Button @click="navigateTo(HOME_LINK)" size="lg" variant="secondary" class="w-full"> Continue Shopping </Button>
 

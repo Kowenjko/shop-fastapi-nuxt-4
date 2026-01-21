@@ -2,7 +2,7 @@
 const cartStore = useCartStore()
 const modalStore = useModalStore()
 
-const handleCheckout = () => {
+const createOrder = () => {
   modalStore.modalProceedCart.show = true
 }
 
@@ -37,7 +37,7 @@ await cartStore.fetchCartDetails()
               </CardHeader>
               <CardContent>
                 <CartInfo />
-                <CartActions @proceed="handleCheckout" @clear="handleClearCart" />
+                <CartActions @proceed="createOrder" @clear="handleClearCart" />
               </CardContent>
             </Card>
           </div>

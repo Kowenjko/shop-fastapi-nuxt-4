@@ -1,10 +1,16 @@
+export enum OrderStatus {
+  DRAFT = 'draft',
+  PAID = 'paid',
+  CANCELED = 'canceled',
+}
 export interface OrderCreateI {
-  promocode?: string
+  promocode?: string | null
 }
 
 export interface OrderItemI {
   product_id: number
   name: string
+  image_url: string
   unit_price: number
   count: number
   total: number
@@ -30,7 +36,10 @@ export interface OrderAddProductI extends OrderRemoveProductI {
 
 export interface OrderAddProductsI {
   order_id: number
-  products: Omit<OrderAddProductI, 'order_id'>[]
+  products: {
+    product_id: number
+    count: number
+  }[]
 }
 
 export interface OrderUpdateCountI extends OrderAddProductI {}

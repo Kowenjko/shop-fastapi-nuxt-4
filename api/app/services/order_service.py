@@ -55,6 +55,7 @@ class OrderService:
             OrderUserResponse(
                 id=order.id,
                 status=order.status,
+                created_at=order.created_at,
                 items=self._to_order_items(order),
                 total_items=order.total_items,
                 total_price=order.total_price,
@@ -347,6 +348,7 @@ class OrderService:
                 {
                     "product_id": item.product.id,
                     "name": item.product.name,
+                    "image_url": item.product.image_url,
                     "unit_price": item.unit_price,
                     "count": item.count,
                     "total": item.unit_price * item.count,

@@ -13,6 +13,7 @@ class OrderBase(BaseModel):
 class OrderItem(BaseModel):
     product_id: int
     name: str
+    image_url: str | None
     unit_price: int
     count: int
     total: int
@@ -35,6 +36,8 @@ class OrderResponse(OrderBase):
 class OrderUserResponse(BaseModel):
     id: int
     status: OrderStatus
+    created_at: datetime
+
     items: List[OrderItem]
     total_items: int
     total_price: int
