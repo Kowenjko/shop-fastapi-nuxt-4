@@ -12,7 +12,7 @@ definePageMeta({
 
 <template>
   <div class="h-screen bg-white">
-    <div class="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl pt-12 pl-4 sm:pl-6 lg:pl-8">
       <TitlePage title="Profile" description="This is an profile page" />
 
       <ClientOnly>

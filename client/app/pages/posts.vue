@@ -46,7 +46,7 @@ definePageMeta({
     <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <TitlePage title="Posts" description="This is an post page" />
 
-      <div v-if="posts?.items && posts.items.length > 0" class="grid grid-cols-3 gap-3">
+      <div v-if="posts?.items && posts.items.length > 0" class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <Card class="mt-8 space-y-6" v-for="post in posts?.items" :key="post.id">
           <CardHeader>
             <CardTitle>{{ post.title }}</CardTitle>

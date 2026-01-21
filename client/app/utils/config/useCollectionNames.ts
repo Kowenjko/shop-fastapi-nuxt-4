@@ -1,4 +1,5 @@
 export const PRODUCTS = 'products/'
+export const PRODUCT = 'product/'
 export const CATEGORY = 'category/'
 export const CATEGORIES = 'categories/'
 export const CART = 'cart/'
@@ -30,3 +31,7 @@ export const CITIES = 'cities/'
 export const REGIONS = 'regions/'
 export const DISTRICTS = 'districts/'
 export const COMMUNITIES = 'communities/'
+
+// orders
+export const CHECKOUT = 'checkout/'
+export const CANCEL = 'cancel/'

@@ -1,5 +1,12 @@
 <script lang="ts" setup>
-import { ShoppingBagIcon, ShoppingCartIcon, UserIcon, LogOutIcon } from 'lucide-vue-next'
+import {
+  ShoppingBagIcon,
+  ShoppingCartIcon,
+  UserIcon,
+  LogOutIcon,
+  ShoppingBasketIcon,
+  BookOpenTextIcon,
+} from 'lucide-vue-next'
 
 const cartStore = useCartStore()
 const modalStore = useModalStore()
@@ -40,13 +47,19 @@ onMounted(async () => {
                 </MenubarTrigger>
                 <MenubarContent>
                   <MenubarItem>
-                    <nuxt-link :to="PROFILE_LINK" class="w-full">Profile</nuxt-link>
+                    <nuxt-link :to="PROFILE_LINK" class="w-full">
+                      <div class="flex gap-2"><UserIcon /> Profile</div>
+                    </nuxt-link>
                   </MenubarItem>
                   <MenubarItem>
-                    <nuxt-link :to="POSTS_LINK" class="w-full">Posts</nuxt-link>
+                    <nuxt-link :to="POSTS_LINK" class="w-full">
+                      <div class="flex gap-2"><BookOpenTextIcon /> Posts</div>
+                    </nuxt-link>
                   </MenubarItem>
                   <MenubarItem>
-                    <nuxt-link :to="ORDERS_LINK" class="w-full">Orders</nuxt-link>
+                    <nuxt-link :to="ORDERS_LINK" class="w-full">
+                      <div class="flex gap-2"><ShoppingBasketIcon /> Orders</div>
+                    </nuxt-link>
                   </MenubarItem>
                   <MenubarSeparator />
                   <MenubarItem>

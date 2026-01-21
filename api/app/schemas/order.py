@@ -51,7 +51,7 @@ class OrderProductUpdate(BaseModel):
 
 
 class AddProduct(BaseModel):
-    user_id: int
+    # user_id: int
     order_id: int
     product_id: int
     count: int = Field(..., ge=1)
@@ -76,7 +76,7 @@ class OrderProductsReplace(OrderProductsAdd):
 
 
 class UserOrderBase(BaseModel):
-    user_id: int
+    # user_id: int
     order_id: int
 
 
