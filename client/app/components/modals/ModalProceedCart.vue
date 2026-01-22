@@ -8,15 +8,19 @@ const createOrder = async () => {
   try {
     const order = await orderAPI.create({ promocode: null })
 
-    const response = await orderAPI.addProducts({
-      order_id: order.id,
-      products: cartStore.cartDetails?.items.map((item) => ({
-        product_id: item.product_id,
-        count: item.quantity,
-      })),
-    })
-    console.log(response)
-  } catch (error) {}
+    const products = cartStore.cartDetails?.items.map((item) => ({
+      product_id: item.product_id,
+      count: item.quantity,
+    }))
+
+    if (!products) return
+    await orderAPI.addProducts({ order_id: order.id, products })
+    modalStore.modalProceedCart.show = false
+    cartStore.clearCart()
+    await navigateTo(ORDERS_LINK)
+  } catch (error) {
+    console.log(error)
+  }
 }
 </script>
 

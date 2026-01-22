@@ -3,6 +3,7 @@ import { defineStore } from 'pinia'
 export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(null)
   const profile = ref<ProfileI | null>(null)
+  const order = ref<any>(null)
 
   const isAuthenticated = computed(() => !!token.value)
 
@@ -13,5 +14,5 @@ export const useAuthStore = defineStore('auth', () => {
 
     return [profile.value?.first_name].map((n) => n?.[0]?.toUpperCase() ?? '').join('')
   })
-  return { token, profile, isAuthenticated, setToken, upperCaseName }
+  return { order, token, profile, isAuthenticated, setToken, upperCaseName }
 })

@@ -9,6 +9,9 @@ class WebSocketManager:
     async def connect(self, user_id: int, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.setdefault(user_id, set()).add(websocket)
+        print(
+            f"🔌 WS CONNECT user={user_id}, total={len(self.active_connections[user_id])}"
+        )
 
     def disconnect(self, user_id: int, websocket: WebSocket):
         self.active_connections[user_id].remove(websocket)
@@ -18,6 +21,8 @@ class WebSocketManager:
     async def send_to_user(self, user_id: int, message: dict):
         for ws in self.active_connections.get(user_id, []):
             await ws.send_json(message)
+            print("📤 SEND TO USER:", user_id)
+            print("📦 AVAILABLE USERS:", self.active_connections.keys())
 
     async def broadcast(self, message: dict):
         for sockets in self.active_connections.values():

@@ -1,6 +1,8 @@
+from asyncio import create_task
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+
 from app.core.config import settings
 from app.core.db_helper import db_helper
 from typing import AsyncGenerator
@@ -18,26 +20,25 @@ from fastapi.responses import JSONResponse, ORJSONResponse
 from app.routes import router as api_router
 from app.routes import ws_router
 
-
-from redis.asyncio import Redis
+from app.core.redis import redis
+from app.utils import ws_redis_listener
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # # startup
-    redis = Redis(
-        host=settings.redis.host,
-        port=settings.redis.port,
-        db=settings.redis.db.cache,
-    )
+
     FastAPICache.init(
         RedisBackend(redis),
         prefix=settings.cache.prefix,
     )
 
+    ws_task = create_task(ws_redis_listener())
+
     yield
     # shutdown
-
+    ws_task.cancel()
+    await redis.close()
     await db_helper.dispose()
 
 

@@ -1,3 +1,4 @@
+import json
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,6 +19,7 @@ from app.schemas.order import (
 )
 
 from app.core.ws_manager import ws_manager
+from app.core.redis import redis
 
 
 class OrderService:
@@ -266,14 +268,18 @@ class OrderService:
         order.status = OrderStatus.CANCELED
 
         await self.session.commit()
-        await ws_manager.send_to_user(
-            order.user_id,
-            {
-                "event": "order.status_changed",
-                "order_id": order.id,
-                "old_status": old_status,
-                "new_status": order.status,
-            },
+
+        await redis.publish(
+            "ws:orders",
+            json.dumps(
+                {
+                    "user_id": order.user_id,
+                    "event": "order.status_changed",
+                    "order_id": order.id,
+                    "old_status": old_status.value,
+                    "new_status": order.status.value,
+                }
+            ),
         )
         return self._to_order_response(order)
 
@@ -302,14 +308,17 @@ class OrderService:
 
         await self.session.commit()
 
-        await ws_manager.send_to_user(
-            order.user_id,
-            {
-                "event": "order.status_changed",
-                "order_id": order.id,
-                "old_status": old_status,
-                "new_status": order.status,
-            },
+        await redis.publish(
+            "ws:orders",
+            json.dumps(
+                {
+                    "user_id": order.user_id,
+                    "event": "order.status_changed",
+                    "order_id": order.id,
+                    "old_status": old_status.value,
+                    "new_status": order.status.value,
+                }
+            ),
         )
         return self._to_order_response(order)
 

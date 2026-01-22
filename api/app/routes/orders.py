@@ -143,9 +143,10 @@ async def remove_product_from_order(
 async def checkout_order(
     data: CheckoutOrder,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    user_id: int = Depends(get_current_user_id),
 ):
     service = OrderService(session)
-    return await service.checkout_order(user_id=data.user_id, order_id=data.order_id)
+    return await service.checkout_order(user_id=user_id, order_id=data.order_id)
 
 
 @router.post(
@@ -156,6 +157,7 @@ async def checkout_order(
 async def cancel_order(
     data: CancelOrder,
     session: Annotated[AsyncSession, Depends(db_helper.session_getter)],
+    user_id: int = Depends(get_current_user_id),
 ):
     service = OrderService(session)
-    return await service.cancel_order(user_id=data.user_id, order_id=data.order_id)
+    return await service.cancel_order(user_id=user_id, order_id=data.order_id)

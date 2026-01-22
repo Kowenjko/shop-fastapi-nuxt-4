@@ -1,9 +1,29 @@
 <script lang="ts" setup>
+import { BanIcon, BanknoteArrowUp } from 'lucide-vue-next'
 import { orderAPI } from '@/api'
 
 const { data: orders, refresh } = await useAPI<OrderI[]>(ORDERS + USER, { key: 'orders' })
 
+useOrdersSocket()
+
 const updating = ref(false)
+
+const cancelOrder = async (order_id: number) => {
+  try {
+    await orderAPI.cancel({ order_id })
+    await refresh()
+  } catch (error) {
+    console.log(error)
+  }
+}
+const checkoutOrder = async (order_id: number) => {
+  try {
+    await orderAPI.checkout({ order_id })
+    await refresh()
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 const increaseQuantity = async (order_id: number, product_id: number, count: number) => {
   updating.value = true
@@ -61,13 +81,16 @@ definePageMeta({
       <main>
         <div v-if="orders && orders.length > 0" class="space-y-4">
           <template v-for="order in orders" :key="order.id">
-            <Card v-if="order.items && order.items.length > 0">
+            <Card
+              v-if="order.items && order.items.length > 0"
+              :class="{ 'pointer-events-none opacity-50': order.status !== OrderStatus.DRAFT }"
+            >
               <CardHeader class="relative">
                 <CardTitle>ID - {{ order.id }} </CardTitle>
                 <CardDescription>count: {{ order.total_items }} total: ${{ order.total_price }}</CardDescription>
                 <div class="absolute -top-3 right-2">
                   <Badge v-if="order.status === OrderStatus.CANCELED" variant="destructive">{{ order.status }}</Badge>
-                  <Badge v-if="order.status === OrderStatus.PAID">{{ order.status }}</Badge>
+                  <Badge v-else-if="order.status === OrderStatus.PAID">{{ order.status }}</Badge>
                   <Badge v-else variant="outline">{{ order.status }}</Badge>
                 </div>
               </CardHeader>
@@ -101,8 +124,12 @@ definePageMeta({
                 </ul>
                 <div v-else>No products</div>
               </CardContent>
-              <CardFooter>
+              <CardFooter class="flex justify-between">
                 <p class="text-sm text-gray-500">Ordered on: {{ new Date(order.created_at).toLocaleDateString() }}</p>
+                <div class="space-x-2">
+                  <Button variant="destructive" @click="cancelOrder(order.id)"> <BanIcon /> Cancel</Button>
+                  <Button @click="checkoutOrder(order.id)"> <BanknoteArrowUp /> Checkout</Button>
+                </div>
               </CardFooter>
             </Card>
           </template>
