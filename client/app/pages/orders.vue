@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { toast } from 'vue-sonner'
+
 import { BanIcon, BanknoteArrowUp } from 'lucide-vue-next'
 import { orderAPI } from '@/api'
 
@@ -31,6 +33,7 @@ const increaseQuantity = async (order_id: number, product_id: number, count: num
   try {
     await orderAPI.updateProductCount({ order_id, product_id, count: count + 1 })
     await refresh()
+    toast.info('Updating quantity product in order')
   } catch (error) {
   } finally {
     updating.value = false
@@ -43,8 +46,10 @@ const decreaseQuantity = async (order_id: number, product_id: number, count: num
   try {
     if (count > 1) {
       await orderAPI.updateProductCount({ order_id, product_id, count: count - 1 })
+      toast.info('Updating quantity product in order')
     } else {
       await orderAPI.removeProduct({ order_id, product_id })
+      toast.warning('Deleted product from order')
     }
     await refresh()
   } catch (error) {
@@ -59,7 +64,7 @@ const handleRemove = async (order_id: number, product_id: number) => {
 
   await orderAPI.removeProduct({ order_id, product_id })
   await refresh()
-
+  toast.warning('Deleted product from order')
   try {
   } catch (error) {
     console.log(error)

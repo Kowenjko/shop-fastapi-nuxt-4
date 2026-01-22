@@ -1,3 +1,5 @@
+import { toast } from 'vue-sonner'
+
 let socket: WebSocket | null = null
 let connecting = false
 
@@ -22,6 +24,7 @@ export function useOrdersSocket() {
       try {
         const data = JSON.parse(event.data)
         console.log('📦 Order event:', data)
+        toast.info(`Change status order #${data.order_id} to "${data.new_status}"`)
       } catch (e) {
         console.error('WS parse error', e)
       }
