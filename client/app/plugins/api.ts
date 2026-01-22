@@ -1,5 +1,6 @@
 import { defineNuxtPlugin } from '#app'
 import { useAuthStore } from '@/stores/auth'
+import { toast } from 'vue-sonner'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const { baseURL } = useBaseUrlApi()
@@ -21,7 +22,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     async onResponseError({ response }) {
       if (process.client) {
         const errorsStore = useErrorsStore()
-        errorsStore.setErrors(response._data)
+        const message = response?._data?.detail || 'An error occurred. Please try again.'
+        errorsStore.setErrors(message)
+
+        toast.error(message)
       }
       if (response.status === 401) await nuxtApp.runWithContext(() => navigateTo('/'))
       throw response._data
