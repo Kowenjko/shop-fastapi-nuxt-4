@@ -60,7 +60,12 @@ class OrderRepository:
             )
         )
         result = await self.session.execute(stmt)
-        return list(result.scalars().all())
+
+        orders = list(result.scalars().all())
+
+        for order in orders:
+            order.products_details.sort(key=lambda pd: pd.product.id)
+        return orders
 
     """Получить все заказы, отсортированные по дате создания."""
 
