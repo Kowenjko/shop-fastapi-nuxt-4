@@ -1,3 +1,4 @@
+export const BASE_API = '/api/'
 export const PRODUCTS = 'products/'
 export const PRODUCT = 'product/'
 export const CATEGORY = 'category/'

@@ -4,7 +4,7 @@ import { toast } from 'vue-sonner'
 export const useOrders = async () => {
   const updating = ref(false)
 
-  const { data: orders, refresh } = await useAPI<OrderI[]>(ORDERS + USER, { key: 'orders' })
+  const { data: orders, refresh } = await useAPI<OrderI[]>(BASE_API + ORDERS + USER, { key: 'orders' })
 
   const cancelOrder = async (order_id: number) => {
     try {

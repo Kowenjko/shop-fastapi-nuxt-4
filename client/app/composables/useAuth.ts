@@ -15,7 +15,7 @@ export const useAuth = () => {
       if (response?.access_token) {
         // @ts-ignore
         authStore.setToken(response.access_token)
-        const data = await $api<ProfileI>(PROFILE)
+        const data = await $api<ProfileI>(BASE_API + PROFILE)
         if (data) authStore.profile = data
       } else authStore.setToken(null)
 

@@ -7,7 +7,7 @@ const cartStore = useCartStore()
 const route = useRoute()
 const router = useRouter()
 
-const { data: product, error, pending } = await useAPI<ProductI>(PRODUCTS + route.params.id + '/')
+const { data: product, error, pending } = await useAPI<ProductI>(BASE_API + PRODUCTS + route.params.id + '/')
 
 const handleAddToCart = async () => {
   if (!product.value) return

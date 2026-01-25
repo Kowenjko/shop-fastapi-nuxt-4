@@ -2,7 +2,7 @@
 const { orders, cancelOrder, checkoutOrder, increaseQuantity, decreaseQuantity, handleRemove, updating } =
   await useOrders()
 
-useOrdersSocket()
+// useOrdersSocket()
 
 definePageMeta({
   layout: 'profile',

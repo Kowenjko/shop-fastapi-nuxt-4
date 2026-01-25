@@ -27,7 +27,7 @@ class GithubConfig(BaseModel):
     authorize_url: str = "https://github.com/login/oauth/authorize"
     api_base_url: str = "https://api.github.com/"
     client_kwargs: dict = {"scope": "user:email"}
-    redirect_uri: str = "https://api.shop.local/api/auth/github/callback"
+    redirect_uri: str = "https://fastapi-api.fly.dev/api/auth/github/callback"
 
 
 class GoogleConfig(BaseModel):
@@ -39,12 +39,12 @@ class GoogleConfig(BaseModel):
     )
 
     client_kwargs: dict = {"scope": "openid email profile"}
-    redirect_uri: str = "https://api.shop.local/api/auth/google/callback"
+    redirect_uri: str = "https://fastapi-api.fly.dev/api/auth/google/callback"
 
 
 class OAuthConfig(BaseModel):
     session_secret_key: str
-    frontend_redirect: str = "https://shop.local/"
+    frontend_redirect: str = "https://fastapi-client.fly.dev/"
     github: GithubConfig
     google: GoogleConfig
 
@@ -129,6 +129,8 @@ class Settings(BaseSettings):
         "http://0.0.0.0:3000",
         "https://shop.local",
         "https://api.shop.local",
+        "https://fastapi-api.fly.dev",
+        "https://fastapi-client.fly.dev",
     ]
     static_dir: str = "static"
     images_dir: str = "static/images"

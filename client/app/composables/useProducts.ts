@@ -24,7 +24,7 @@ export const useProducts = () => {
 
   const fetchProducts = async () => {
     error.value = null
-    const { data, error: errorProducts, pending } = await useAPI<AllProductI>(PRODUCTS, { key: 'products' })
+    const { data, error: errorProducts, pending } = await useAPI<AllProductI>(BASE_API + PRODUCTS, { key: 'products' })
     loading.value = pending.value
     products.value = data.value?.products || []
     error.value = errorProducts.value || null
@@ -33,14 +33,18 @@ export const useProducts = () => {
   const fetchProductById = async (id: number) => {
     error.value = null
 
-    const { data, error: errorProduct, pending } = await useAPI<ProductI[]>(PRODUCTS + id + '/', { key: 'product' })
+    const {
+      data,
+      error: errorProduct,
+      pending,
+    } = await useAPI<ProductI[]>(BASE_API + PRODUCTS + id + '/', { key: 'product' })
     loading.value = pending.value
     error.value = errorProduct.value || null
     return data.value || null
   }
 
   const fetchCategories = async () => {
-    const { data, error: errorCategories } = await useAPI<CategoryI[]>(CATEGORIES, { key: 'categories' })
+    const { data, error: errorCategories } = await useAPI<CategoryI[]>(BASE_API + CATEGORIES, { key: 'categories' })
     categories.value = data.value || []
     error.value = errorCategories.value || null
   }

@@ -3,9 +3,16 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
-  ssr: true,
+  devtools: { enabled: false },
+  ssr: false,
   css: ['./app/assets/css/main.css'],
+
+  nitro: {
+    preset: 'node-server',
+    externals: {
+      inline: ['vue', '@vue/server-renderer'],
+    },
+  },
   components: [
     {
       path: '~/components',
@@ -20,8 +27,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiBaseUrl: process.env.NUXT_API_BASE_URL,
-      apiBaseUrlServer: process.env.NUXT_API_URL_SERVER,
+      apiBaseUrl: process.env.NUXT_API_BASE_URL || 'http://localhost:8000',
+      apiBaseUrlServer: process.env.NUXT_API_URL_SERVER || 'http://localhost:8000',
     },
   },
 
@@ -33,12 +40,5 @@ export default defineNuxtConfig({
     componentDir: './app/components/ui',
   },
 
-  modules: [
-    '@vueuse/nuxt',
-    '@pinia/nuxt',
-    'nuxt-typed-router',
-    '@nuxt/image',
-    'pinia-plugin-persistedstate/nuxt',
-    'shadcn-nuxt',
-  ],
+  modules: ['@vueuse/nuxt', '@pinia/nuxt', '@nuxt/image', 'pinia-plugin-persistedstate/nuxt', 'shadcn-nuxt'],
 })

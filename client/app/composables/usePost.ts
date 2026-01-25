@@ -3,7 +3,7 @@ import { postAPI } from '@/api'
 export const usePost = async () => {
   const modalStore = useModalStore()
 
-  const { data: posts, refresh } = await useAPI<PostsI>(POSTS, { key: 'posts' })
+  const { data: posts, refresh } = await useAPI<PostsI>(BASE_API + POSTS, { key: 'posts' })
 
   const deletePost = async (postId: number) => {
     try {

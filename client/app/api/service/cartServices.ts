@@ -1,7 +1,7 @@
 export const cartAPI = {
   async getCart(cartData: { cart: CartI }) {
     const { $api } = useNuxtApp()
-    return await $api<ResponseCartI>(CART, {
+    return await $api<ResponseCartI>(BASE_API + CART, {
       method: 'POST',
       body: { cart: cartData.cart },
     })
@@ -9,7 +9,7 @@ export const cartAPI = {
 
   async addItem(item: AddToCartI, cartData: CartI) {
     const { $api } = useNuxtApp()
-    return await $api<{ cart: CartI }>(CART + ADD, {
+    return await $api<{ cart: CartI }>(BASE_API + CART + ADD, {
       method: 'POST',
       body: { product_id: item.product_id, quantity: item.quantity, cart: cartData },
     })
@@ -17,7 +17,7 @@ export const cartAPI = {
 
   async updateItem(item: AddToCartI, cartData: CartI) {
     const { $api } = useNuxtApp()
-    return await $api<{ cart: CartI }>(CART + UPDATE, {
+    return await $api<{ cart: CartI }>(BASE_API + CART + UPDATE, {
       method: 'PUT',
       body: { product_id: item.product_id, quantity: item.quantity, cart: cartData },
     })
@@ -25,7 +25,7 @@ export const cartAPI = {
 
   async removeItem(productId: number, cartData: CartI) {
     const { $api } = useNuxtApp()
-    return await $api<{ cart: CartI }>(CART + REMOVE + productId + '/', {
+    return await $api<{ cart: CartI }>(BASE_API + CART + REMOVE + productId + '/', {
       method: 'DELETE',
       body: { cart: cartData },
     })

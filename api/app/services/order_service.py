@@ -269,18 +269,18 @@ class OrderService:
 
         await self.session.commit()
 
-        await redis.publish(
-            "ws:orders",
-            json.dumps(
-                {
-                    "user_id": order.user_id,
-                    "event": "order.status_changed",
-                    "order_id": order.id,
-                    "old_status": old_status.value,
-                    "new_status": order.status.value,
-                }
-            ),
-        )
+        # await redis.publish(
+        #     "ws:orders",
+        #     json.dumps(
+        #         {
+        #             "user_id": order.user_id,
+        #             "event": "order.status_changed",
+        #             "order_id": order.id,
+        #             "old_status": old_status.value,
+        #             "new_status": order.status.value,
+        #         }
+        #     ),
+        # )
         return self._to_order_response(order)
 
     """Оплатить (оформить) заказ."""
@@ -308,18 +308,18 @@ class OrderService:
 
         await self.session.commit()
 
-        await redis.publish(
-            "ws:orders",
-            json.dumps(
-                {
-                    "user_id": order.user_id,
-                    "event": "order.status_changed",
-                    "order_id": order.id,
-                    "old_status": old_status.value,
-                    "new_status": order.status.value,
-                }
-            ),
-        )
+        # await redis.publish(
+        #     "ws:orders",
+        #     json.dumps(
+        #         {
+        #             "user_id": order.user_id,
+        #             "event": "order.status_changed",
+        #             "order_id": order.id,
+        #             "old_status": old_status.value,
+        #             "new_status": order.status.value,
+        #         }
+        #     ),
+        # )
         return self._to_order_response(order)
 
     """Проверка, что заказ существует."""

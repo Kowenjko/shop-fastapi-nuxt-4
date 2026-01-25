@@ -71,7 +71,7 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory=settings.static_dir), name="static")
 
 app.include_router(api_router)
-app.include_router(ws_router)
+# app.include_router(ws_router)
 
 
 @app.get("/")

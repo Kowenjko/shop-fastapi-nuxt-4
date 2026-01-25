@@ -13,7 +13,7 @@ export function useOrdersSocket() {
 
     connecting = true
 
-    socket = new WebSocket(`wss://api.shop.local/ws/orders?token=${authStore.token}`)
+    socket = new WebSocket(`wss://fastapi-api.fly.dev/ws/orders?token=${authStore.token}`)
 
     socket.onopen = () => {
       connecting = false

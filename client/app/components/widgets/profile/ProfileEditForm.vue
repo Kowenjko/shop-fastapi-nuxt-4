@@ -17,21 +17,21 @@ const searchCity = ref(profile?.city?.name || '')
 
 const showEditCity = ref(false)
 
-const { data: regions } = await useAPI(CITIES + REGIONS, { key: 'regions' })
+const { data: regions } = await useAPI(BASE_API + CITIES + REGIONS, { key: 'regions' })
 
-const { data: districts } = await useAPI(CITIES + DISTRICTS, {
+const { data: districts } = await useAPI(BASE_API + CITIES + DISTRICTS, {
   key: 'districts',
   query: { region: selectRegion },
   watch: [selectRegion],
 })
 
-const { data: communities } = await useAPI(CITIES + COMMUNITIES, {
+const { data: communities } = await useAPI(BASE_API + CITIES + COMMUNITIES, {
   key: 'communities',
   query: { region: selectRegion, district: selectDistrict },
   watch: [selectDistrict],
 })
 
-const { data: cities } = await useAPI<CitiesI>(CITIES, {
+const { data: cities } = await useAPI<CitiesI>(BASE_API + CITIES, {
   key: 'cities',
   query: { region: selectRegion, district: selectDistrict, community: selectCommunity, name: searchCity, per_page: 10 },
   watch: [selectCommunity],
