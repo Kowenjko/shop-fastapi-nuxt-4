@@ -9,4 +9,3 @@
     <ModalRegister />
   </div>
 </template>
-s

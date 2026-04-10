@@ -67,7 +67,8 @@ class ProductRepository:
     async def create(self, product_data: ProductCreate) -> Product:
         db_product = Product(**product_data.model_dump())
         self.session.add(db_product)
-        await self.session.commit()
+        # await self.session.commit()
+        await self.session.flush()  # вместо commit
         await self.session.refresh(db_product)
         return db_product
 

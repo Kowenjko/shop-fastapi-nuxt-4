@@ -126,6 +126,6 @@ class ProductService:
         product = await self.product_repository.create(product_data)
 
         # очищаем cash(redis) после создания product
-        await FastAPICache.clear(settings.cache.namespace.products)
+        # await FastAPICache.clear(settings.cache.namespace.products)
 
         return ProductResponse.model_validate(product)
